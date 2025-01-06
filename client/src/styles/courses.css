@@ -1,0 +1,80 @@
+.courses-page {
+    display: flex;
+    margin-left: 350px;
+    flex-direction: column;
+  }
+  
+  .courses-content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  h2 {
+    color: #f39c12;
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .courses-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .course-card {
+    padding: 20px;
+    background-color: #D91656;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .course-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .course-card h3 {
+    color: white;
+    font-size: 18px;
+  }
+  
+  /* Lecture Cards */
+  .lectures-list {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .lecture-card {
+    padding: 15px;
+    background-color: #f39c12;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 120px;
+  }
+  
+  .lecture-card:hover {
+    transform: scale(1.05);
+    background-color: #d35400;
+  }
+  
+  .lecture-card h4 {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .lecture-card p {
+    color: white;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+  

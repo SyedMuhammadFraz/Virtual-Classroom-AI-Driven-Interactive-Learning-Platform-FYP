@@ -1,0 +1,138 @@
+:root {
+    --primary-color: #f39c12; /* Yellow theme */
+    --background-color: #ffffff; /* White */
+    --text-color: #333; /* Dark gray */
+    --input-border-color: #ccc;
+    --button-color: #f39c12;
+    --button-hover-color: #e67e22;
+    --forgot-color: red;
+  }
+  
+  body {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  .signin-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--background-color);
+  }
+  
+  .signin-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    background: #f9f9f9;
+    padding: 30px;
+    border: 2px solid #0078ff; /* Blue border */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  
+  .signin-left {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .signin-left h1 {
+    color: var(--primary-color);
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .signin-left p {
+    color: var(--text-color);
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .signin-left form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .signin-left input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .signin-left input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px var(--primary-color);
+    outline: none;
+  }
+  
+  .forgot-password {
+    font-size: 14px;
+    color: var(--forgot-color);
+    text-decoration: none;
+    margin-bottom: 20px;
+  }
+  
+  .forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  .signin-button {
+    background-color: var(--button-color);
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .signin-button:hover {
+    background-color: var(--button-hover-color);
+  }
+
+  a{
+    color: #ffffff;
+  }
+  
+  .create-account {
+    font-size: 16px;
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  .create-account:hover {
+    text-decoration: underline;
+  }
+  
+  .signin-right {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .signin-right img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .teacher-image {
+    max-width: 70%;
+    height: auto;
+    border-radius: 20px; /* Optional for rounded corners */
+  }
+  
+  

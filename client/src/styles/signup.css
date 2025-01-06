@@ -1,0 +1,97 @@
+.signup-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+  }
+  
+  .signup-container {
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 70%;
+    max-width: 1000px;
+    overflow: hidden;
+  }
+  
+  .signup-left {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .signup-left h1 {
+    font-size: 36px;
+    color: #f39c12; /* Yellow theme */
+    margin-bottom: 10px;
+  }
+  
+  .signup-left p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  .signup-left form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .signup-left input {
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .signup-left input:focus {
+    outline: none;
+    border-color: #f39c12; /* Yellow theme */
+    box-shadow: 0 0 5px rgba(243, 156, 18, 0.4);
+  }
+  
+  .signup-left .signup-button {
+    font-size: 16px;
+    padding: 10px;
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .signup-left .signup-button:hover {
+    background-color: #e67e22;
+  }
+  
+  .signup-left .login-account {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+    text-decoration: none;
+  }
+  
+  .signup-left .login-account:hover {
+    text-decoration: underline;
+  }
+  
+  .signup-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff; /* Light Yellow background */
+  }
+  
+  .teacher-image {
+    max-width: 80%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
