@@ -8,6 +8,8 @@ import CoursesPage from "./components/courses"
 import AssignmentsQuizzesPage from "./components/assignments";
 import ProgressReportPage from "./components/progressreport";
 
+// This is the main file
+
 const App = () => {
   return (
     <Router>
