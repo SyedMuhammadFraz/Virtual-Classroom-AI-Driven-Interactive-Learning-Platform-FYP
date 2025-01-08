@@ -7,7 +7,7 @@ import Profile from "./components/profilepage"
 import CoursesPage from "./components/courses"
 import AssignmentsQuizzesPage from "./components/assignments";
 import ProgressReportPage from "./components/progressreport";
-
+import WhiteboardChatLayout from "./components/lecture";
 // This is the main file
 
 const App = () => {
@@ -22,6 +22,7 @@ const App = () => {
         <Route path="/lecture" element={<CoursesPage />} />
         <Route path="/assignment" element={<AssignmentsQuizzesPage />} />
         <Route path="/progress-report" element={<ProgressReportPage />} />
+        <Route path="/videolesson" element={<WhiteboardChatLayout />} />
       </Routes>
     </Router>
   );
