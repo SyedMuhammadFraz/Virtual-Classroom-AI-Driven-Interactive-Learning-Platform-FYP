@@ -1,18 +1,69 @@
-.lecturers-page {
-    display: flex;
-    height: 100vh;
-  }
-  
-  .content {
-    flex: 1; /* Make the content area take up remaining space */
-    margin-left: 250px; /* Push content to the right to make space for the sidebar */
-    height: 100vh;
-    overflow: hidden;
-  }
-  .course-name {
-    font-size: 30px;
-    font-weight: bolder;
-    margin-bottom: 20px; /* Space below course name */
-    text-align: center; /* Center-align the course name */
-  }
-  
+.classroom-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f9f9f9;
+  overflow: hidden;
+}
+
+/* Teacher Avatar Section */
+.teacher-avatar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e6f7ff; /* Light blue background for avatar */
+  padding: 20px;
+  border-right: 1px solid #ccc;
+}
+
+/* Video Placeholder Section */
+.video-placeholder {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff; /* White background for video */
+  padding: 20px;
+  border-right: 1px solid #ccc;
+}
+
+/* Chatbot Section */
+.chatbot-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #f0f5ff; /* Light gray background for chatbot */
+  padding: 20px;
+}
+
+.chatbot-box {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.chatbot-box input {
+  width: calc(100% - 60px);
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.chatbot-box button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #1890ff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.chatbot-box button:hover {
+  background-color: #0056b3;
+}
