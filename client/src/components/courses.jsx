@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
 import "../styles/courses.css";
 import Sidebar from "./sidebar";
 
 const CoursesPage = () => {
+  const navigate = useNavigate(); // Create the navigate function using useNavigate hook
   const [selectedCourse, setSelectedCourse] = useState(null);
 
   // Sample data for courses and lectures
@@ -30,13 +32,14 @@ const CoursesPage = () => {
     ],
   };
 
-  const handleCourseClick = (courseId) => {
-    setSelectedCourse(courseId);
+  const handleLectureClick = (courseId) => {
+    // Navigate to LecturesPage with the selected courseId
+    navigate(`/lectures/${courseId}`);
   };
 
   return (
     <div className="courses-page">
-      <Sidebar/>
+      <Sidebar />
       <div className="courses-content">
         <h2>Select a Course</h2>
         {/* Course Selection */}
@@ -45,7 +48,7 @@ const CoursesPage = () => {
             <div
               key={course.id}
               className="course-card"
-              onClick={() => handleCourseClick(course.id)}
+              onClick={() => setSelectedCourse(course.id)}
             >
               <h3>{course.name}</h3>
             </div>
@@ -57,7 +60,11 @@ const CoursesPage = () => {
           <div className="lectures-list">
             <h2>Lectures for {courses.find((c) => c.id === selectedCourse)?.name}</h2>
             {lectures[selectedCourse]?.map((lecture) => (
-              <div key={lecture.id} className="lecture-card">
+              <div
+                key={lecture.id}
+                className="lecture-card"
+                onClick={() => handleLectureClick(selectedCourse)} // On lecture click, navigate to LecturesPage
+              >
                 <h4>{lecture.title}</h4>
                 <p>{lecture.description}</p>
               </div>
