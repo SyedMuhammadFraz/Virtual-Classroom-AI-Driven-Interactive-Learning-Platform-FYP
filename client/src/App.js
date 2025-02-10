@@ -10,6 +10,7 @@ import ProgressReportPage from "./components/progressreport";
 import LecturesPage from "./components/lecture";
 import AdminDashboard from "./components/admin-dashboard";
 import PrivateRoute from "./components/PrivateRoute"; // Import PrivateRoute
+import ForgotPassword from "./components/ForgotPassword";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/" element={<SignIn />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Student Routes */}
         <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} requiredRole="student" />} />

@@ -11,13 +11,13 @@ const SignUp = () => {
           <p>Create Your Account</p>
           <form>
             <input type="text" placeholder="Full Name" required />
+            <input type="text" placeholder="Username" required />
             <input type="email" placeholder="Email" required />
+            <label htmlFor="dob">Date of Birth</label>
+            <input type="date" id="dob" required />
+            <input type="tel" placeholder="Contact Number" required />
             <input type="password" placeholder="Password" required />
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              required
-            />
+            <input type="password" placeholder="Confirm Password" required />
             <button type="submit" className="signup-button">
               Sign Up
             </button>

@@ -13,7 +13,7 @@ function Lecture() {
       <h2 className="course-name">Selected CourseId: {courseId}</h2>
 
       {/* Main Content */}
-      <div className="content">
+      <div className="lesson-content">
         {/* 3D Avatar Section */}
         <div className="avatar-section">
           <Canvas shadows camera={{ position: [0, 2, 5], fov: 30 }}>

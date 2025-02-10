@@ -1,10 +1,19 @@
 // Sidebar.js
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaHome, FaUserAlt, FaBook, FaClipboardList, FaChartBar, FaSignOutAlt } from "react-icons/fa";  // Importing icons
+import ConfirmationModal from "../modals/confirmation-modal";
 import "../styles/sidebar.css";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userToken");
+    navigate("/signin");
+  };
+
   return (
     <div className="sidebar">
       <div className="sidebar-profile">
@@ -47,12 +56,19 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <button className="logout-button">
+          <button className="logout-button" onClick={() => setShowModal(true)}>
             <FaSignOutAlt className="sidebar-icon" />
             <span>Log Out</span>
           </button>
         </li>
       </ul>
+      {showModal && (
+        <ConfirmationModal
+          message="Are you sure you want to log out?"
+          onConfirm={handleLogout}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };

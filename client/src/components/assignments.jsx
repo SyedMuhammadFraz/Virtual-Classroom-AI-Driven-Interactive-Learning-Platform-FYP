@@ -49,7 +49,7 @@ const AssignmentsQuizzesPage = () => {
         {activeTab === "assignments" && (
           <div className="card-grid">
             {assignments.map((assignment) => (
-              <div key={assignment.id} className="card">
+              <div key={assignment.id} className="assignment-card">
                 <div className="card-content">
                   <h3>{assignment.title}</h3>
                   <p>{assignment.description}</p>
@@ -64,7 +64,7 @@ const AssignmentsQuizzesPage = () => {
         {activeTab === "quizzes" && (
           <div className="card-grid">
             {quizzes.map((quiz) => (
-              <div key={quiz.id} className="card">
+              <div key={quiz.id} className="assignment-card">
                 <div className="card-content">
                   <h3>{quiz.title}</h3>
                   <p>{quiz.description}</p>
