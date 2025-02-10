@@ -1,17 +1,33 @@
-.classroom-container {
+.lecturers-page {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   background-color: #f9f9f9;
   overflow: hidden;
 }
 
-/* Teacher Avatar Section */
-.teacher-avatar {
+/* Heading Section */
+.course-name {
+  text-align: center;
+  padding: 20px;
+  background-color: #e6f7ff; /* Light blue background for heading */
+  margin: 0; /* Remove default margin */
+}
+
+/* Main Content Section */
+.content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 3D Avatar Section */
+.avatar-section {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e6f7ff; /* Light blue background for avatar */
+  background-color: #ffffff; /* White background for avatar */
   padding: 20px;
   border-right: 1px solid #ccc;
 }
@@ -36,6 +52,7 @@
   justify-content: flex-start;
   background-color: #f0f5ff; /* Light gray background for chatbot */
   padding: 20px;
+  overflow-y: auto; /* Adds scrollbar if content overflows */
 }
 
 .chatbot-box {
@@ -45,12 +62,14 @@
   border-radius: 5px;
   background: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adds spacing between input and button */
 }
 
 .chatbot-box input {
-  width: calc(100% - 60px);
+  flex: 1;
   padding: 10px;
-  margin-right: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
@@ -66,4 +85,17 @@
 
 .chatbot-box button:hover {
   background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+  .avatar-section, .video-placeholder, .chatbot-container {
+    flex: none;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+  }
 }
