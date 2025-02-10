@@ -1,0 +1,291 @@
+/* Admin Panel Styling */
+.admin-dashboard {
+  font-family: "Poppins", sans-serif;
+  background-color: #eef1f6;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Title Styling */
+.admin-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #34495e;
+  margin-bottom: 30px;
+}
+
+/* Filter Section */
+.filter-section {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.filter-section h2 {
+  font-size: 1.6rem;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.filter-section input {
+  max-width: 90%;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #dcdde1;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.filter-section input:focus {
+  border-color: #3498db;
+}
+
+/* Sections Layout */
+.admin-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Cards */
+.admin-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+}
+
+.admin-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Headings inside cards */
+.admin-card h2 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+/* Input Fields */
+.admin-card input,
+.admin-card select {
+  max-width: 90%;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #dcdde1;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.admin-card input:focus,
+.admin-card select:focus {
+  border-color: #3498db;
+}
+
+/* Buttons */
+.admin-card button {
+  width: 90%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.admin-card button:hover {
+  background: linear-gradient(135deg, #2980b9, #1f618d);
+}
+
+/* Data Table Section */
+.admin-data-table {
+  margin-top: 40px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Container */
+/* Admin Table Section */
+.admin-table-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive Grid */
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  /* Individual Table Card */
+  .admin-table-card {
+    width: 90%;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+  }
+  
+  .admin-table-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Table Headings */
+  .admin-table-card h3 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  
+  /* List Items */
+  .admin-table-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .admin-table-card li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 12px;
+    margin: 5px 0;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #34495e;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Button container */
+  .button-container {
+    display: flex;
+    gap: 5px; /* Space between buttons */
+  }
+  
+  /* Edit and Delete Buttons */
+  .edit-btn,
+  .delete-btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+  }
+  
+  /* Edit Button */
+  .edit-btn {
+    background-color: #4caf50; /* Green */
+    color: white;
+    margin-right: 5px;
+  }
+  
+  .edit-btn:hover {
+    background-color: #45a049;
+  }
+  
+  /* Delete Button */
+  .delete-btn {
+    background-color: #f44336; /* Red */
+    color: white;
+  }
+  
+  .delete-btn:hover {
+    background-color: #d32f2f;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .admin-table-container {
+      grid-template-columns: 1fr; /* Stack cards in a single column */
+    }
+  
+    .admin-table-card li {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .edit-btn,
+    .delete-btn {
+      width: 100%;
+      margin-top: 5px;
+    }
+  }
+  
+
+/* Tables for Student Progress and Test Reports */
+
+.admin-table-container2 {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    overflow-x: auto; /* Enables horizontal scroll on small screens */
+    margin-top: 20px;
+  }
+
+.admin-table {
+  margin-top: 40px;
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #dcdde1;
+}
+
+.admin-table th {
+  background-color: #34495e;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.admin-table td {
+  font-size: 1rem;
+  color: #34495e;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-sections {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-table-card {
+    width: 90%;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    font-size: 0.9rem;
+  }
+}
