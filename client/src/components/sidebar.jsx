@@ -142,7 +142,7 @@ const Sidebar = () => {
     <div className="sidebar">
       <div className="sidebar-profile">
         <img
-          src="https://via.placeholder.com/100"
+          src="./Logo.png"
           alt="Profile"
           className="profile-image"
         />
