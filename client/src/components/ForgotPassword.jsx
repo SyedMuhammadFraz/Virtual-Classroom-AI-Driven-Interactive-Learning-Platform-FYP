@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/ForgotPassword.css";
-
+import axios from 'axios';
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [otpSent, setOtpSent] = useState(false);

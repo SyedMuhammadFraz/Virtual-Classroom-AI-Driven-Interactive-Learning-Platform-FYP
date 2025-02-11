@@ -21,7 +21,7 @@ import jwt from "jsonwebtoken";
     }
   
     // Generate JWT for admin login
-    const accessToken = jwt.sign({ email: email , role : "admin"}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+    const accessToken = jwt.sign({ email: email , role : "admin"}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1d" });
     const refreshToken = jwt.sign({ email: email, role : "admin" }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
   
     // Set the cookies for the tokens
@@ -65,7 +65,7 @@ import jwt from "jsonwebtoken";
     const newAccessToken =  jwt.sign(
       { email: decodedToken.email, role: "admin" },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
     const newRefreshToken =  jwt.sign(
         { email: decodedToken.email, role: "admin" },
@@ -93,7 +93,7 @@ import jwt from "jsonwebtoken";
     }
     const existingCourse = await Course.findOne({ where: { name } });
     if (existingCourse) {
-      throw new apiError("Course of this name already Exists");
+      throw new apiError(400,"Course of this name already Exists");
     }
     const newCourse = await Course.create({ name, description });
     const createdCourse = await Course.findOne({
@@ -105,7 +105,7 @@ import jwt from "jsonwebtoken";
       }
     return res
       .status(201)
-      .json(new apiResponse(201, createCourse, "Course created successfully"));
+      .json(new apiResponse(200, createCourse, "Course created successfully"));
   });
     const getAllCourses = asyncHandler(async (req, res) => {
     const courses = await Course.findAll({ order: [["created_at", "ASC"]] });
@@ -131,12 +131,29 @@ import jwt from "jsonwebtoken";
       .status(200)
       .json(new apiResponse(200, existingCourse.id, "Course ID fetched successfully"));
   });
+  
+  const getCourseIdfromLId = asyncHandler(async (req, res) => {
 
+    const { id } = req.body;
+    if(!(id)){
+
+        throw new apiError(401,"Lesson ID is Required")
+    }
+    const existingCourse = await Lesson.findOne({ where: { id } });
+    if(!existingCourse){
+
+        throw new apiError(401,"Course Not Found")
+    }
+
+    return res
+      .status(200)
+      .json(new apiResponse(200, existingCourse.course_id, "Course ID fetched successfully"));
+  });
    const updateCourse = asyncHandler(async (req, res) => {
 
-    const { oldname,name,description } = req.body;
-
-    if(!(oldname,name,description)){
+    const { oldname,name } = req.body;
+     
+    if(!(oldname,name)){
 
         throw new apiError(401,"All fields are required")
     }
@@ -150,9 +167,8 @@ import jwt from "jsonwebtoken";
 
         throw new apiError(401,"Course not Found")
      }
-  
+    
     course.name = name ;
-    course.description = description;
   
     await course.save();
   
@@ -190,7 +206,7 @@ import jwt from "jsonwebtoken";
     const { course_id, title, content } = req.body;
     
     if (!course_id || !title) {
-      throw new apiError(400, "Course ID and title are required");
+      throw new apiError(400, "Course ID OR title are required");
     }
     const course = await Course.findOne({
         where: {
@@ -365,7 +381,7 @@ const createAssignment = asyncHandler(async (req, res) => {
 
         throw new apiError(401,"Assignment with old and new title are required")
     }
-    const assignment = await Lesson.findOne({
+    const assignment = await Assignment.findOne({
         where: {
           title: oldtitle
         }
@@ -426,7 +442,7 @@ const createQuiz = asyncHandler(async (req, res) => {
     }
     const existingQuiz = await Quiz.findOne({ where: { title } });
     if (existingQuiz) {
-      throw new apiError("Quizof this name already generated");
+      throw new apiError(400,"Quiz of this name already generated");
     }
     const quiz = await Quiz.create({
       lesson_id,
@@ -532,5 +548,6 @@ const createQuiz = asyncHandler(async (req, res) => {
    getAllQuizes,
    getQuizId,
    updateQuiz,
-   deleteQuiz
+   deleteQuiz,
+   getCourseIdfromLId
   }

@@ -1,25 +1,93 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/assignments.css";
 import Sidebar from "./sidebar";
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const AssignmentsQuizzesPage = () => {
-  const [activeTab, setActiveTab] = useState("assignments"); // Manage active tab
+  // State variables
+  const [activeTab, setActiveTab] = useState("assignments");
+  const [assignments, setAssignments] = useState([]); // State to store assignments
+  const [quizzes, setQuizzes] = useState([]); // State to store quizzes
 
-  const assignments = [
-    { id: 1, title: "Assignment 1", description: "Solve basic math problems.", deadline: "2024-12-01" },
-    { id: 2, title: "Assignment 2", description: "Write an essay on climate change.", deadline: "2024-12-05" },
-    { id: 3, title: "Assignment 3", description: "Create a small React app.", deadline: "2024-12-10" },
-  ];
+  // Fetch all assignments
+  const fetchAllAssignments = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/users/getassignments",
+        {}
+      );
+  
+      if (response.status === 200) {
+        if (response.data?.data) {
+          setAssignments(response.data.data.map(assignment => {
+            // Format the due_date if it exists, otherwise default to "No deadline set"
+            const formattedDueDate = assignment.due_date 
+              ? new Date(assignment.due_date).toISOString().split('T')[0] // Convert to YYYY-MM-DD format
+              : "No deadline set";
+  
+            return {
+              id: assignment.id,
+              title: assignment.title,
+              description: assignment.description,
+              lesson: assignment.lesson_id,
+              deadline: formattedDueDate,
+            };
+          }));
+        } else {
+          toast.error("No Assignments found.");
+        }
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to fetch Assignments.");
+      console.error("Error fetching Assignments:", error);
+    }
+  };
 
-  const quizzes = [
-    { id: 1, title: "Quiz 1", description: "Basic Science Quiz", duration: "10 minutes" },
-    { id: 2, title: "Quiz 2", description: "History Quiz", duration: "15 minutes" },
-    { id: 3, title: "Quiz 3", description: "General Knowledge", duration: "20 minutes" },
-  ];
+  // Fetch all quizzes
+  const fetchAllQuizzes = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/users/getquizes",
+        {}
+      );
+  
+      if (response.status === 200) {
+        if (response.data?.data) {
+          setQuizzes(response.data.data.map(quiz => {
+            // Format the created_at date if available, otherwise default to "Not specified"
+            const formattedCreatedAt = quiz.created_at 
+              ? new Date(quiz.created_at).toISOString().split('T')[0] // Convert to YYYY-MM-DD format
+              : "Not specified";
+  
+            return {
+              id: quiz.id,
+              title: quiz.title,
+              description: "Complete the Following Quiz before the due date . Late Submisson not Allowd",
+              lesson: quiz.lesson_id,
+              duration: formattedCreatedAt, // Display formatted date or default message
+            };
+          }));
+        } else {
+          toast.error("No Quizzes found.");
+        }
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to fetch Quizzes.");
+      console.error("Error fetching Quizzes:", error);
+    }
+  };
+  
+
+  // Fetch assignments and quizzes when the component mounts
+  useEffect(() => {
+    fetchAllAssignments();
+    fetchAllQuizzes();
+  }, []);
 
   return (
     <div className="assignments-quizzes-container">
-    <Sidebar/>
+      <Sidebar />
       {/* Header Section */}
       <header className="header">
         <h1>
@@ -48,31 +116,39 @@ const AssignmentsQuizzesPage = () => {
       <div className="content">
         {activeTab === "assignments" && (
           <div className="card-grid">
-            {assignments.map((assignment) => (
-              <div key={assignment.id} className="assignment-card">
-                <div className="card-content">
-                  <h3>{assignment.title}</h3>
-                  <p>{assignment.description}</p>
-                  <p className="details">Deadline: {assignment.deadline}</p>
-                  <button className="primary-button">Submit</button>
+            {assignments.length === 0 ? (
+              <p>No assignments available at the moment.</p>
+            ) : (
+              assignments.map((assignment) => (
+                <div key={assignment.id} className="assignment-card">
+                  <div className="card-content">
+                    <h3>{assignment.title}</h3>
+                    <p>{assignment.description}</p>
+                    <p className="details">Deadline: {assignment.deadline}</p>
+                    <button className="primary-button">Submit</button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
 
         {activeTab === "quizzes" && (
           <div className="card-grid">
-            {quizzes.map((quiz) => (
-              <div key={quiz.id} className="assignment-card">
-                <div className="card-content">
-                  <h3>{quiz.title}</h3>
-                  <p>{quiz.description}</p>
-                  <p className="details">Duration: {quiz.duration}</p>
-                  <button className="primary-button">Start Quiz</button>
+            {quizzes.length === 0 ? (
+              <p>No quizzes available at the moment.</p>
+            ) : (
+              quizzes.map((quiz) => (
+                <div key={quiz.id} className="assignment-card">
+                  <div className="card-content">
+                    <h3>{quiz.title}</h3>
+                    <p>{quiz.description}</p>
+                    <p className="details">Duration: {quiz.duration}</p>
+                    <button className="primary-button">Start Quiz</button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
       </div>

@@ -10,8 +10,10 @@ dotenv.config();
 const app = express()
 app.use(cors({
 
-    origin: process.env.CORS_ORIGIN,
-    credentials:true
+    // origin: process.env.CORS_ORIGIN,
+  origin: 'http://localhost:3000',  // Allow frontend to access the backend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
 }))
 
 app.use(express.json({

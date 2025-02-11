@@ -7,6 +7,7 @@ import User from '../models/userModel.js';
 import moment from "moment";
 
 
+
     const registerUser = asyncHandler(async (req, res) => {
     const { username, fullname,email, password, role,dob,contact } = req.body;
     if (!username || !email || !password || !role || !fullname || !contact || !dob) {
@@ -76,7 +77,7 @@ import moment from "moment";
     });
   
       if (!user) {
-          throw new apiError(404, "User doesn't exist");
+          throw new apiError(404, "Invalid Email or Password");
       }
   
       // Check if password is correct
@@ -95,8 +96,9 @@ import moment from "moment";
   
       // Cookie options
       const options = {
-          httpOnly: true,
-          secure: true 
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'None' // Required for cross-origin requests
       };
   
       return res
@@ -121,8 +123,9 @@ import moment from "moment";
         });
 
         const options = {
-            httpOnly: true,
-            secure: true,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'None' // Required for cross-origin requests
         };
 
         // Clear the cookies for access and refresh tokens
@@ -193,9 +196,9 @@ import moment from "moment";
       );
     });
     const forgetPassword = asyncHandler(async (req, res) => {
-      const { email, password,newPassword } = req.body;
+      const { email } = req.body;
     
-      if (!(password || email || newPassword)) {
+      if (!( email )) {
         throw new apiError(400, "All the fields are required");
     }
 
@@ -207,15 +210,33 @@ import moment from "moment";
         throw new apiError(404, "User doesn't exist");
     }
     
-      user.password_hash = await bcrypt.hash(newPassword, 10); 
+      // user.password_hash = await bcrypt.hash(newPassword, 10); 
     
-      await user.save({ validateBeforeSave: false });
+      // await user.save({ validateBeforeSave: false });
     
       return res.status(200).json(
-        new apiResponse(200, "your password changed successfully")
+        new apiResponse(200, "Email found Successfully")
       );
     });
     
+    const getUserProfile = asyncHandler(async (req, res, next) => {
+      try {
+          const { id } = req.user; // Destructure id from req.user
+          const existingUser = await User.findOne({ where: { id } });
+  
+          if (!existingUser) {
+              throw new apiError(404, "User Not Found"); // Changed 401 to 404 (Not Found)
+          }
+  
+          // Extract required fields
+          const { fullname, email, dob, contact } = existingUser;
+  
+  
+          return res.status(200).json(new apiResponse(200, { fullname, email, dob, contact }, "User details fetched successfully"));
+      } catch (error) {
+          next(error); // Pass errors to the error-handling middleware
+      }
+  });
     export{
 
         registerUser,
@@ -223,7 +244,8 @@ import moment from "moment";
         logout,
         refreshAccessToken,
         updateUserProfile,
-        forgetPassword
+        forgetPassword,
+        getUserProfile
       
     }
 

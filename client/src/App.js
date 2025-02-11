@@ -11,10 +11,12 @@ import LecturesPage from "./components/lecture";
 import AdminDashboard from "./components/admin-dashboard";
 import PrivateRoute from "./components/PrivateRoute"; // Import PrivateRoute
 import ForgotPassword from "./components/ForgotPassword";
+import {ToastContainer} from 'react-toastify'
 
 const App = () => {
   return (
     <Router>
+      <ToastContainer/>
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<SignIn />} />

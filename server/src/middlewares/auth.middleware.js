@@ -48,7 +48,7 @@ export const verifyAdminJWT = (req, res, next) => {
       throw new apiError(403, "Access denied. Admin only");
     }
 
-    req.admin = decodedToken; // Attach admin details to request
+    req.user = decodedToken; // Attach admin details to request
     next(); // Proceed to the next middleware/controller
   } catch (error) {
     throw new apiError(401, error?.message || "Invalid access token"); // Pass errors to the error handler

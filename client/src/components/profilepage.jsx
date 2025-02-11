@@ -1,17 +1,43 @@
 // Profile.js
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Sidebar from "./sidebar.jsx";
 import "../styles/profilepage.css";
 import profileImage from "../assets/placeholder.jpg";
+import axios from 'axios';
+import {toast} from 'react-toastify'
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState({
-    Name: "John Doe",
-    Email: "johndoe@example.com",
-    DOB: "02/04/2003",
-    Contact: "03249876502",
+    fullname: "",
+    email: "",
+    dob: "",
+    contact: "",
   });
+  
+    // Fetch user data when the component mounts
+    useEffect(() => {
+      const fetchUserProfile = async () => {
+        try {
+          const token = localStorage.getItem("accessToken");
+          const response = await axios.get(
+            "http://localhost:5000/api/v1/users/getuserdetails",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+  
+          if (response.status === 200) {
+            setUser(response.data.data); // API returns { data: { name, email, dob, contact } }
+          }
+        } catch (error) {
+          toast.error(error.response?.data?.message || "Failed to fetch user profile.");
+          console.error("Error fetching user profile:", error);
+        }
+      };
+  
+      fetchUserProfile();
+    }, []);
 
   const handleEditToggle = () => setIsEditing(!isEditing);
 
@@ -20,11 +46,43 @@ const Profile = () => {
     setUser({ ...user, [name]: value });
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     setIsEditing(false);
-    console.log("Profile updated:", user);
+
+    try {
+      // Send the updated user data to the API
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/users/updateprofile",
+        {
+          name: user.fullname,
+          email: user.email,
+          dob: user.dob,
+          contact: user.contact,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Include the access token if required
+          },
+        }
+      );
+
+      // Handle successful response
+      if (response.status === 200) {
+        toast.success("Profile updated successfully!");
+        console.log("Profile updated:", user);
+      }
+    } catch (error) {
+      // Handle error
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message); // Show backend error message
+      } else {
+        toast.error("Failed to update profile. Please try again."); // Generic error message
+      }
+      console.error("Error updating profile:", error);
+    }
   };
+
 
   return (
     <div className="profile-page">
@@ -32,7 +90,7 @@ const Profile = () => {
       <div className="profile-content">
         <div className="profile-header">
           <img src={profileImage} alt="Profile" className="profile-avatar" />
-          <h2>{user.Name}</h2>
+          <h2>{user.fullname}</h2>
           <p className="profile-role">Role: Student</p>
         </div>
 
@@ -44,8 +102,8 @@ const Profile = () => {
                 Name:
                 <input
                   type="text"
-                  name="Name"
-                  value={user.Name}
+                  name="fullname"
+                  value={user.fullname}
                   onChange={handleChange}
                   required
                 />
@@ -54,8 +112,8 @@ const Profile = () => {
                 Email:
                 <input
                   type="email"
-                  name="Email"
-                  value={user.Email}
+                  name="email"
+                  value={user.email}
                   onChange={handleChange}
                   required
                 />
@@ -64,8 +122,8 @@ const Profile = () => {
                 DOB:
                 <input
                   type="text"
-                  name="DOB"
-                  value={user.DOB}
+                  name="dob"
+                  value={user.dob}
                   onChange={handleChange}
                   required
                 />
@@ -73,8 +131,8 @@ const Profile = () => {
               <label>
                 Contact:
                 <textarea
-                  name="Contact"
-                  value={user.Contact}
+                  name="contact"
+                  value={user.contact}
                   onChange={handleChange}
                   required
                 />
@@ -85,7 +143,7 @@ const Profile = () => {
             </form>
           ) : (
             <>
-              <p>Contact: {user.Contact}</p>
+              <p>Contact: {user.contact}</p>
               <button
                 className="profile-edit-button"
                 onClick={handleEditToggle}

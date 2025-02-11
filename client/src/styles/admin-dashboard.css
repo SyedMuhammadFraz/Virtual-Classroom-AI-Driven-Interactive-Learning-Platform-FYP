@@ -29,6 +29,27 @@
   color: #2c3e50;
   margin-bottom: 15px;
 }
+.logout-container {
+  display: flex;
+  justify-content: center;  /* Horizontally center */
+  align-items: center;      /* Vertically center */
+  margin-top: 20px;         /* Add margin if you need spacing */
+  height: 100px;            /* Set height to help with vertical centering */
+}
+
+.logout-btn {
+  background-color: #d9534f;
+  color: white;
+  padding: 10px 20px;
+  font-size: 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #c9302c;
+}
 
 .filter-section input {
   max-width: 90%;
