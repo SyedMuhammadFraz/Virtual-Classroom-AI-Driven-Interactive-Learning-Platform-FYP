@@ -64,6 +64,7 @@ User.prototype.generateAccessToken = function() {
       email: this.email,
       username: this.username,
       fullName: this.fullname,
+      role:"user"
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -77,6 +78,7 @@ User.prototype.generateRefreshToken = function() {
   return jwt.sign(
     {
       _id: this.id,
+      role:"user"   
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
