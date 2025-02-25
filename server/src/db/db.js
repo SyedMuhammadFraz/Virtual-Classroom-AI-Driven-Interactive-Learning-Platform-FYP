@@ -4,10 +4,10 @@ import { DB_NAME } from "../constants.js";  // Your database name
 
 
 // Set up Sequelize connection
-const sequelize = new Sequelize(DB_NAME, 'postgres', '2022', {
+const sequelize = new Sequelize(DB_NAME, 'postgres', 'fraz', {
   host: 'localhost',
   dialect: 'postgres',
-  port: 5432,
+  port: 5433,
   logging: false, // Disable logging SQL queries
 });
 

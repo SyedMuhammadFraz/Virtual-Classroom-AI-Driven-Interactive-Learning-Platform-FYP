@@ -26,7 +26,7 @@ def ensure_directory(directory):
 
 
 def text_to_image(text, image_name, width=1280, height=720, font_size=40):
-    """Convert text to an image and save it."""
+    """Convert text to an image, center it, and save it."""
     ensure_directory(IMAGE_DIR)
     image_path = os.path.join(IMAGE_DIR, image_name)
 
@@ -40,8 +40,11 @@ def text_to_image(text, image_name, width=1280, height=720, font_size=40):
         font = ImageFont.load_default()
 
     wrapped_text = textwrap.fill(text, width=50)
+    text_width, text_height = draw.textsize(wrapped_text, font=font)
+    text_x = (width - text_width) // 2
+    text_y = (height - text_height) // 2
     
-    draw.text((50, 50), wrapped_text, fill='black', font=font)
+    draw.text((text_x, text_y), wrapped_text, fill='black', font=font, align='center')
     
     img.save(image_path)
     print(f"✅ Image saved: {image_path}")
@@ -49,8 +52,8 @@ def text_to_image(text, image_name, width=1280, height=720, font_size=40):
     return image_path
 
 
-def images_to_video(image_dir=IMAGE_DIR, output_video=VIDEO_OUTPUT, frame_rate=1):
-    """Convert images in a directory to a video."""
+def images_to_video(image_dir=IMAGE_DIR, output_video=VIDEO_OUTPUT, frame_rate=1/7):
+    """Convert images in a directory to a video with 7s per image."""
     images = sorted([img for img in os.listdir(image_dir) if img.endswith(".png")])
     
     if not images:
@@ -74,7 +77,8 @@ def images_to_video(image_dir=IMAGE_DIR, output_video=VIDEO_OUTPUT, frame_rate=1
         if frame is None:
             print(f"❌ Skipping unreadable image: {img_path}")
             continue
-        video.write(frame)
+        for _ in range(int(7 * frame_rate)):
+            video.write(frame)  # Repeat frame for 7 seconds
 
     video.release()
     print(f"✅ Video saved as {output_video}")
