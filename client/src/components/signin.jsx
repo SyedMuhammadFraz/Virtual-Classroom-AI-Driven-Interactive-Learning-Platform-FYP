@@ -4,22 +4,18 @@ import "../styles/signin.css";
 import axios from 'axios';
 import teacherImage from "../assets/students.jpg";
 import { toast } from 'react-toastify';
-
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
   // Check if the user is already logged in and if the token is valid
   const checkLogin = async () => {
     const accessToken = localStorage.getItem("accessToken");
-    
     try {
       if (!accessToken) {
         console.log("No token found, please log in.");
         return;
       }
-  
       // First, try verifying the user token
       try {
         const response = await axios.get("http://localhost:5000/api/v1/users/verify", {
@@ -27,13 +23,11 @@ const SignIn = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-  
         if (response.status === 200) {
           navigate("/dashboard");
         }
       } catch (error) {
         console.log("User verification failed, trying admin...");
-  
         // If user verification fails, proceed with the admin check
         try {
           const response = await axios.get("http://localhost:5000/api/v1/users/verifyadmin", {
@@ -41,7 +35,6 @@ const SignIn = () => {
               Authorization: `Bearer ${accessToken}`,
             },
           });
-  
           if (response.status === 200) {
             navigate("/admin");
           }
@@ -54,14 +47,11 @@ const SignIn = () => {
       console.error("You have to login again");
     }
   };
-  
   useEffect(() => {
     checkLogin();
   }, []);
-  
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent form reload
-
     // Dummy authentication logic (Replace with API call)
     if (email === "admin@123.com" && password === "admin_123") {
       try {
@@ -84,15 +74,12 @@ const SignIn = () => {
       try {
         // Send login request to the backend for student login
         const response = await axios.post('http://localhost:5000/api/v1/users/login', { email, password });
-
         const { accessToken, refreshToken, user } = response.data.data;
-
         // Store the tokens in localStorage
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("user", user);
         localStorage.setItem("role", "student"); // Assuming user has a role field
-
         navigate("/dashboard"); // Redirect to student dashboard
         toast.success("User logged in successfully!");
       } catch (error) {
@@ -105,7 +92,6 @@ const SignIn = () => {
       }
     }
   };
-
   return (
     <div className="signin-page">
       <div className="signin-container">
@@ -113,19 +99,19 @@ const SignIn = () => {
           <h1>Virtual Classroom</h1>
           <p>Login to your Account</p>
           <form onSubmit={handleLogin}>
-            <input 
-              type="email" 
-              placeholder="Email" 
-              required 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+            <input
+              type="email"
+              placeholder="Email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <input 
-              type="password" 
-              placeholder="Password" 
-              required 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
+            <input
+              type="password"
+              placeholder="Password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <a href="/forgot-password" className="forgot-password">
               Forgot your Password?
@@ -139,15 +125,14 @@ const SignIn = () => {
           </a>
         </div>
         <div className="signin-right">
-          <img 
-            src={teacherImage} 
-            alt="Virtual Classroom Characters" 
-            className="teacher-image" 
+          <img
+            src={teacherImage}
+            alt="Virtual Classroom Characters"
+            className="teacher-image"
           />
         </div>
       </div>
     </div>
   );
 };
-
 export default SignIn;

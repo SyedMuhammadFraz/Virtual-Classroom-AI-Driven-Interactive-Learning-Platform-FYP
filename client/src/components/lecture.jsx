@@ -52,7 +52,9 @@ function Lecture() {
         );
 
         setVideoUrl(
-          `http://localhost:5000${response.data.videoUrl}?t=${new Date().getTime()}`
+          `http://localhost:5000${
+            response.data.videoUrl
+          }?t=${new Date().getTime()}`
         );
         setLoading(false);
       } catch (error) {
@@ -74,7 +76,9 @@ function Lecture() {
     setAnswer("");
     setContext([]);
     try {
-      const response = await axios.post("http://localhost:5002/ask", { question });
+      const response = await axios.post("http://localhost:5002/ask", {
+        question,
+      });
       setAnswer(response.data.answer);
       setContext(response.data.context || []);
     } catch (err) {
@@ -98,7 +102,7 @@ function Lecture() {
           </Canvas>
         </div>
 
-        {/* Video Section */}
+        {/* Video Section
         <div className="video-placeholder">
           {loading ? (
             <p>Generating lecture...</p>
@@ -110,6 +114,13 @@ function Lecture() {
           ) : (
             <p>Failed to load lecture.</p>
           )}
+        </div> */}
+
+        <div className="video-placeholder">
+          <video width="640" controls>
+            <source src='/Output Video.mp4' type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
 
         {/* Chatbot Section */}
@@ -134,7 +145,9 @@ function Lecture() {
                 <div className="context-section">
                   <h4>📄 Relevant Document Excerpts:</h4>
                   {context.map((text, index) => (
-                    <p key={index} className="context-text">{text}</p>
+                    <p key={index} className="context-text">
+                      {text}
+                    </p>
                   ))}
                 </div>
               )}

@@ -5,7 +5,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 const SignUp = () => {
   const [fullname, setFullName] = useState("");
   const [username, setUsername] = useState("");
@@ -16,16 +15,13 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
   const role = "user";
-
   const handleSignUp = async (e) => {
     e.preventDefault(); // Prevent form reload
-
     // Basic validation
     if (password !== confirmPassword) {
       toast.error("Passwords do not match!");
       return;
     }
-
     try {
       // Send registration data to the backend
       const response = await axios.post("http://localhost:5000/api/v1/users/register", {
@@ -37,7 +33,6 @@ const SignUp = () => {
         dob,
         contact,
       });
-
       // Handle successful registration
         // Display success toast
         toast.success("Registration successful! Redirecting to sign-in...");
@@ -48,12 +43,10 @@ const SignUp = () => {
         setPassword("");
         setContact("");
         setDob("");
-
         // Navigate to sign-in page after 2 seconds
         setTimeout(() => navigate("/signin"), 2000);
     } catch (error) {
       console.error("Registration failed:", error);
-
       // Display error toast
       if (error.response && error.response.data && error.response.data.message) {
         toast.error(error.response.data.message); // Show backend error message
@@ -62,7 +55,6 @@ const SignUp = () => {
       }
     }
   };
-
   return (
     <div className="signup-page">
       <div className="signup-container">
@@ -139,5 +131,4 @@ const SignUp = () => {
     </div>
   );
 };
-
 export default SignUp;
