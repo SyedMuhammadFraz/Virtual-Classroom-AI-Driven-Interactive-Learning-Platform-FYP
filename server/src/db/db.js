@@ -1,28 +1,29 @@
+import { Sequelize } from "sequelize";
+import dotenv from "dotenv";
 
-import { Sequelize } from 'sequelize';
-import { DB_NAME } from "../constants.js";  // Your database name
 
+dotenv.config();
 
-// Set up Sequelize connection
-const sequelize = new Sequelize(DB_NAME, 'postgres', 'fraz', {
-  host: 'localhost',
-  dialect: 'postgres',
-  port: 5433,
-  logging: false, // Disable logging SQL queries
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  protocol: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false, // Accept unverified certs for Neon
+    },
+  },
+  logging: false, // Turn off logging
 });
 
 export const connectDatabase = async () => {
-  
-    // Test the connection
-    try{
-
-      await sequelize.authenticate();
-      console.log("Database Connected Successfully")
-    }
-    catch(error){
-
-      console.log("Database Failed to Connect");
-    }
-}
+  // Test the connection
+  try {
+    await sequelize.authenticate();
+    console.log("Database Connected Successfully");
+  } catch (error) {
+    console.log("Database Failed to Connect");
+  }
+};
 
 export default sequelize;

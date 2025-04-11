@@ -1,5 +1,5 @@
-import { asyncHandler } from "../utils/asyncHandler.js";
-import { apiError } from "../utils/apiError.js";
+import { asyncHandler } from "../utils/asynchandler.js";
+import { apiError } from "../utils/Apierror.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { ADMIN_EMAIL,ADMIN_PASSWORD } from "../constants.js";
 import {Course,Lesson,Assignment,Quiz} from "../models/adminModel.js"; 

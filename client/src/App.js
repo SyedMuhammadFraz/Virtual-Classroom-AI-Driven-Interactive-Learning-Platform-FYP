@@ -9,31 +9,115 @@ import AssignmentsQuizzesPage from "./components/assignments";
 import ProgressReportPage from "./components/progressreport";
 import LecturesPage from "./components/lecture";
 import AdminDashboard from "./components/admin-dashboard";
-import PrivateRoute from "./components/PrivateRoute"; // Import PrivateRoute
+import PrivateRoute from "./utils/PrivateRoute"; // Import PrivateRoute
 import ForgotPassword from "./components/ForgotPassword";
-import {ToastContainer} from 'react-toastify'
+import { ToastContainer } from "react-toastify";
+import Sidebar from "./components/sidebar";
+import PublicRoute from "./utils/PublicRoutes";
 
 const App = () => {
   return (
     <Router>
-      <ToastContainer/>
+      <ToastContainer />
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<SignIn />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<PublicRoute element={<SignIn />} />} />
+        <Route path="/signin" element={<PublicRoute element={<SignIn />} />} />
+        <Route path="/signup" element={<PublicRoute element={<SignUp />} />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Student Routes */}
-        <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} requiredRole="student" />} />
-        <Route path="/lectures/:courseId" element={<PrivateRoute element={<LecturesPage />} requiredRole="student" />} />
-        <Route path="/profile" element={<PrivateRoute element={<Profile />} requiredRole="student" />} />
-        <Route path="/lecture" element={<PrivateRoute element={<CoursesPage />} requiredRole="student" />} />
-        <Route path="/assignment" element={<PrivateRoute element={<AssignmentsQuizzesPage />} requiredRole="student" />} />
-        <Route path="/progress-report" element={<PrivateRoute element={<ProgressReportPage />} requiredRole="student" />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute
+              element={
+                <>
+                  <Sidebar />
+                  <Dashboard />
+                </>
+              }
+              requiredRole="student"
+            />
+          }
+        />
+        <Route
+          path="/lectures/:courseId"
+          element={
+            <PrivateRoute
+              element={
+                <>
+                  <LecturesPage />
+                </>
+              }
+              requiredRole="student"
+            />
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute
+              element={
+                <>
+                  <Sidebar />
+                  <Profile />
+                </>
+              }
+              requiredRole="student"
+            />
+          }
+        />
+        <Route
+          path="/lecture"
+          element={
+            <PrivateRoute
+              element={
+                <>
+                  <Sidebar />
+                  <CoursesPage />
+                </>
+              }
+              requiredRole="student"
+            />
+          }
+        />
+        <Route
+          path="/assignment"
+          element={
+            <PrivateRoute
+              element={
+                <>
+                  <Sidebar />
+                  <AssignmentsQuizzesPage />
+                </>
+              }
+              requiredRole="student"
+            />
+          }
+        />
+        <Route
+          path="/progress-report"
+          element={
+            <PrivateRoute
+              element={
+                <>
+                  <Sidebar />
+                  <ProgressReportPage />
+                </>
+              }
+              requiredRole="student"
+            />
+          }
+        />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<PrivateRoute element={<AdminDashboard />} requiredRole="admin" />} />
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute element={<AdminDashboard />} requiredRole="admin" />
+          }
+        />
       </Routes>
     </Router>
   );

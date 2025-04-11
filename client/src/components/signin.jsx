@@ -1,97 +1,115 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/signin.css";
-import axios from 'axios';
+import axios from "axios";
 import teacherImage from "../assets/students.jpg";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  // Check if the user is already logged in and if the token is valid
+
+  // Function to check if the user is already logged in (with valid token)
   const checkLogin = async () => {
     const accessToken = localStorage.getItem("accessToken");
+
+    if (!accessToken) {
+      console.log("No token found, please log in.");
+      return;
+    }
+
     try {
-      if (!accessToken) {
-        console.log("No token found, please log in.");
+      // Check user login status
+      const userResponse = await axios.get("http://localhost:5000/api/v1/users/verify", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (userResponse.status === 200) {
+        navigate("/dashboard"); // Redirect to student dashboard
         return;
       }
-      // First, try verifying the user token
+    } catch (error) {
+      console.log("User verification failed, trying admin...");
+
+      // Check admin login status if user verification fails
       try {
-        const response = await axios.get("http://localhost:5000/api/v1/users/verify", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+        const adminResponse = await axios.get("http://localhost:5000/api/v1/users/verifyadmin", {
+          headers: { Authorization: `Bearer ${accessToken}` },
         });
-        if (response.status === 200) {
-          navigate("/dashboard");
+
+        if (adminResponse.status === 200) {
+          navigate("/admin"); // Redirect to admin dashboard
         }
       } catch (error) {
-        console.log("User verification failed, trying admin...");
-        // If user verification fails, proceed with the admin check
-        try {
-          const response = await axios.get("http://localhost:5000/api/v1/users/verifyadmin", {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          if (response.status === 200) {
-            navigate("/admin");
-          }
-        } catch (error) {
-          console.error("Invalid token or access denied.");
-          // Optionally, show a login prompt or redirect to the login page
-        }
+        console.error("Invalid token or access denied.");
       }
-    } catch (error) {
-      console.error("You have to login again");
     }
   };
-  useEffect(() => {
-    checkLogin();
-  }, []);
+
+  // Handle login request for students
+  const handleStudentLogin = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/v1/users/login", { email, password });
+      const { accessToken, refreshToken, user } = response.data.data;
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("user", JSON.stringify(user)); // Save user object in localStorage
+      localStorage.setItem("role", "student");
+
+      toast.success("User logged in successfully!");
+      navigate("/dashboard"); // Redirect to student dashboard
+    } catch (error) {
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.message || "Login failed. Please try again.");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
+      console.error("Student login failed:", error);
+    }
+  };
+
+  // Handle login request for admin
+  const handleAdminLogin = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/v1/users/adminlogin", { email, password });
+      const { accessToken, refreshToken } = response.data.data;
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("role", "admin");
+
+      toast.success("Admin logged in successfully!");
+      navigate("/admin"); // Redirect to admin dashboard
+    } catch (error) {
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.message || "Login failed. Please try again.");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
+      console.error("Admin login failed:", error);
+    }
+  };
+
+  // Handle login form submission
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent form reload
-    // Dummy authentication logic (Replace with API call)
+
     if (email === "admin@123.com" && password === "admin_123") {
-      try {
-        const response = await axios.post('http://localhost:5000/api/v1/users/adminlogin', { email, password });
-        const { accessToken, refreshToken } = response.data.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        localStorage.setItem("role", "admin");
-        navigate("/admin");
-        toast.success("Admin logged in successfully!"); // Store admin role
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.message) {
-          toast.error(error.response.data.message); // Show backend error message
-        } else {
-          toast.error("Login failed. Please try again."); // Generic error message
-        }
-        console.error("Login failed:", error);
-      }
+      // Admin login
+      handleAdminLogin();
     } else {
-      try {
-        // Send login request to the backend for student login
-        const response = await axios.post('http://localhost:5000/api/v1/users/login', { email, password });
-        const { accessToken, refreshToken, user } = response.data.data;
-        // Store the tokens in localStorage
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        localStorage.setItem("user", user);
-        localStorage.setItem("role", "student"); // Assuming user has a role field
-        navigate("/dashboard"); // Redirect to student dashboard
-        toast.success("User logged in successfully!");
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.message) {
-          toast.error(error.response.data.message); // Show backend error message
-        } else {
-          toast.error("Login failed. Please try again."); // Generic error message
-        }
-        console.error("Login failed:", error);
-      }
+      // Student login
+      handleStudentLogin();
     }
   };
+
+  useEffect(() => {
+    console.log("Checking login status...");
+    checkLogin(); // Check if the user is already logged in
+  }, []);
+
   return (
     <div className="signin-page">
       <div className="signin-container">
@@ -101,18 +119,26 @@ const SignIn = () => {
           <form onSubmit={handleLogin}>
             <input
               type="email"
+              name="email"
+              id="email"
               placeholder="Email"
+              autoComplete="false"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+
             <input
               type="password"
+              name="password"
+              id="password"
               placeholder="Password"
+              autoComplete="false"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+
             <a href="/forgot-password" className="forgot-password">
               Forgot your Password?
             </a>
@@ -135,4 +161,5 @@ const SignIn = () => {
     </div>
   );
 };
+
 export default SignIn;
