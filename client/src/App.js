@@ -14,6 +14,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import { ToastContainer } from "react-toastify";
 import Sidebar from "./components/sidebar";
 import PublicRoute from "./utils/PublicRoutes";
+import Quizpage from "./components/quizpage"; // Import the Quizpage component
 
 const App = () => {
   return (
@@ -104,6 +105,22 @@ const App = () => {
                 <>
                   <Sidebar />
                   <ProgressReportPage />
+                </>
+              }
+              requiredRole="student"
+            />
+          }
+        />
+
+        {/* Quiz Route */}
+        <Route
+          path="/quiz"
+          element={
+            <PrivateRoute
+              element={
+                <>
+                  
+                  <Quizpage />
                 </>
               }
               requiredRole="student"
