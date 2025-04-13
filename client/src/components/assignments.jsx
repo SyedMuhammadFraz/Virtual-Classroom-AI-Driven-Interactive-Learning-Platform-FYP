@@ -18,15 +18,15 @@ const AssignmentsQuizzesPage = () => {
         "http://localhost:5000/api/v1/users/getassignments",
         {}
       );
-  
+
       if (response.status === 200) {
         if (response.data?.data) {
           setAssignments(response.data.data.map(assignment => {
             // Format the due_date if it exists, otherwise default to "No deadline set"
-            const formattedDueDate = assignment.due_date 
+            const formattedDueDate = assignment.due_date
               ? new Date(assignment.due_date).toISOString().split('T')[0] // Convert to YYYY-MM-DD format
               : "No deadline set";
-  
+
             return {
               id: assignment.id,
               title: assignment.title,
@@ -52,15 +52,15 @@ const AssignmentsQuizzesPage = () => {
         "http://localhost:5000/api/v1/users/getquizes",
         {}
       );
-  
+
       if (response.status === 200) {
         if (response.data?.data) {
           setQuizzes(response.data.data.map(quiz => {
             // Format the created_at date if available, otherwise default to "Not specified"
-            const formattedCreatedAt = quiz.created_at 
+            const formattedCreatedAt = quiz.created_at
               ? new Date(quiz.created_at).toISOString().split('T')[0] // Convert to YYYY-MM-DD format
               : "Not specified";
-  
+
             return {
               id: quiz.id,
               title: quiz.title,
@@ -78,7 +78,7 @@ const AssignmentsQuizzesPage = () => {
       console.error("Error fetching Quizzes:", error);
     }
   };
-  
+
 
   // Fetch assignments and quizzes when the component mounts
   useEffect(() => {
