@@ -3,7 +3,8 @@ import { loginUser,registerUser,logout,refreshAccessToken,updateUserProfile,forg
 import { verifyJWT,verifyAdminJWT } from "../middlewares/auth.middleware.js";
 import { adminLogin, adminLogout, createAssignment, createCourse, createLesson, createQuiz, deleteAssignment, deleteCourse, deleteLesson, deleteQuiz, getAllAssignments, getAllCourses, getAllLessons, getAllQuizes, getAssignmentId, getCourseId, getCourseIdfromLId, getLessonId, getQuizId, refreshAdminAccessToken, updateAssignment, updateCourse, updateLesson, updateQuiz } from "../controllers/adminController.js";
 import {generateQuizController, getQuizController} from "../controllers/quizController.js";
-import { saveStudentQuizResultController } from "../controllers/studentResultController.js";
+import { saveStudentQuizResultController, updateDifficultyController, updateStudentCourseResultController } from "../controllers/studentResultController.js";
+import { updateStudentCourseResult } from "../services/updateStudentCourseResultService.js";
 const router = Router();
 
 router.get('/verify', verifyJWT, (req, res, next) => {
@@ -64,4 +65,6 @@ router.route("/getcid").post(verifyAdminJWT,getCourseIdfromLId)
 router.post('/generateQuiz', generateQuizController); // Route to generate a quiz based on lessonId
 router.post('/save-result', saveStudentQuizResultController); // Route to save student's quiz result
 router.route("/getquiz").post(getQuizController);
-export default router
+router.route("/update-result").post(updateStudentCourseResultController);  
+router.post('/update-difficulty', updateDifficultyController); // Route to update the difficulty level of a student based on their performance
+export default router;
