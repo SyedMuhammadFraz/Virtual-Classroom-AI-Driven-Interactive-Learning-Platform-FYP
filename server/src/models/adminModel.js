@@ -84,15 +84,6 @@ export const Course = sequelize.define(
         autoIncrement: true,
         primaryKey: true,
       },
-      course_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: Course,
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-      },
       lesson_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -127,7 +118,6 @@ export const Course = sequelize.define(
   );
   
   // Defining the relationships
-  Assignment.belongsTo(Course, { foreignKey: 'course_id' });
   Assignment.belongsTo(Lesson, { foreignKey: 'lesson_id' });
 
   // Quizes Section

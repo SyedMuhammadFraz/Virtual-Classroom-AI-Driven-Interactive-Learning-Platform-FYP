@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/assignments.css";
 import Sidebar from "./sidebar";
 import axios from 'axios';
@@ -84,7 +85,7 @@ const AssignmentsQuizzesPage = () => {
     fetchAllAssignments();
     fetchAllQuizzes();
   }, []);
-
+  const navigate = useNavigate();
   return (
     <div className="assignments-quizzes-container">
       <Sidebar />
@@ -144,7 +145,8 @@ const AssignmentsQuizzesPage = () => {
                     <h3>{quiz.title}</h3>
                     <p>{quiz.description}</p>
                     <p className="details">Duration: {quiz.duration}</p>
-                    <button className="primary-button">Start Quiz</button>
+                    <button className="primary-button"
+                    onClick={() => navigate("/quiz", { state: { title: quiz.title } })}>Start Quiz</button>
                   </div>
                 </div>
               ))

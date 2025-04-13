@@ -116,6 +116,7 @@ const Sidebar = () => {
   });
   useEffect(() => {
     const fetchUserProfile = async () => {
+      
       try {
         const token = localStorage.getItem("accessToken");
         const response = await axios.get(

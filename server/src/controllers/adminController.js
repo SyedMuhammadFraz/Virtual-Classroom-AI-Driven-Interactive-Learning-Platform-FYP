@@ -312,19 +312,10 @@ import jwt from "jsonwebtoken";
 // Assignments Section 
 
 const createAssignment = asyncHandler(async (req, res) => {
-    const { course_id, lesson_id, title, description, due_date } = req.body;
+    const {lesson_id, title, description, due_date } = req.body;
     
-    if (!course_id || !lesson_id || !title || !due_date) {
+    if ( !lesson_id || !title || !due_date) {
       throw new apiError(400, "Course ID, Lesson ID, Title, and Due Date are required");
-    }
-    const course = await Course.findOne({
-        where: {
-          id: course_id
-        }
-      });
-    if(!course){
-
-        throw new apiError(401,"Course with this Id dont Exist.")
     }
     const lesson = await Lesson.findOne({
         where: {
@@ -340,7 +331,6 @@ const createAssignment = asyncHandler(async (req, res) => {
       throw new apiError("Assignment of this name already generated");
     }
     const assignment = await Assignment.create({
-      course_id,
       lesson_id,
       title,
       description,

@@ -4,7 +4,6 @@ import "../styles/lecture.css";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-
 function Lecture() {
   const { courseId, studentId } = useParams();
   const [videoUrl, setVideoUrl] = useState(null);
@@ -14,7 +13,6 @@ function Lecture() {
   const [context, setContext] = useState([]);
   const [error, setError] = useState("");
   const [loadingAnswer, setLoadingAnswer] = useState(false);
-
   useEffect(() => {
     const fetchLectureVideo = async () => {
       try {
@@ -24,9 +22,7 @@ function Lecture() {
           performance: 68,
           weakTopics: ["Loops", "Functions"],
         };
-
         console.log("Performance Data:", performanceData);
-
         // Dummy lesson generation based on weak topics
         const lessonTexts = [
           "Understanding Loops in JavaScript",
@@ -40,9 +36,7 @@ function Lecture() {
           "Using loops, you can perform operations like summing numbers, modifying arrays, and more.",
           "Functions help in structuring your code better and can be used inside loops to organize logic.",
         ];
-
         console.log("Generated Lesson:", lessonTexts);
-
         // Send texts to Python API to generate video
         const response = await axios.post(
           "http://localhost:5000/generate-video",
@@ -50,7 +44,6 @@ function Lecture() {
             texts: lessonTexts,
           }
         );
-
         setVideoUrl(
           `http://localhost:5000${
             response.data.videoUrl
@@ -62,10 +55,8 @@ function Lecture() {
         setLoading(false);
       }
     };
-
     fetchLectureVideo();
   }, [studentId, courseId]);
-
   const handleAskQuestion = async () => {
     if (!question.trim()) {
       setError("Please enter a question.");
@@ -86,22 +77,19 @@ function Lecture() {
     }
     setLoadingAnswer(false);
   };
-
   return (
     <div className="lecturers-page">
       {/* Heading */}
       <h2 className="course-name">Course: {courseId}</h2>
-
       {/* Main Content */}
       <div className="lesson-content">
         {/* 3D Avatar Section */}
         <div className="avatar-section">
           <Canvas shadows camera={{ position: [0, 2, 5], fov: 30 }}>
-            <color attach="background" args={["#ececec"]} />
+            <color attach="background" args={["#ECECEC"]} />
             <Experience />
           </Canvas>
         </div>
-
         {/* Video Section
         <div className="video-placeholder">
           {loading ? (
@@ -115,14 +103,12 @@ function Lecture() {
             <p>Failed to load lecture.</p>
           )}
         </div> */}
-
         <div className="video-placeholder">
           <video width="640" controls>
             <source src='/Output Video.mp4' type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
-
         {/* Chatbot Section */}
         <div className="chatbot-container">
           <div className="chatbot-box">
@@ -139,11 +125,11 @@ function Lecture() {
           {error && <p className="text-red-500">{error}</p>}
           {answer && (
             <div className="chatbot-response">
-              <h3>🤖 AI Answer:</h3>
+              <h3>:robot_face: AI Answer:</h3>
               <p>{answer}</p>
               {context.length > 0 && (
                 <div className="context-section">
-                  <h4>📄 Relevant Document Excerpts:</h4>
+                  <h4>:page_facing_up: Relevant Document Excerpts:</h4>
                   {context.map((text, index) => (
                     <p key={index} className="context-text">
                       {text}
@@ -158,5 +144,4 @@ function Lecture() {
     </div>
   );
 }
-
 export default Lecture;
