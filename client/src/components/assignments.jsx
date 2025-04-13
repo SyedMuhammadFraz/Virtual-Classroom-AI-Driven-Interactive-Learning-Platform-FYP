@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/assignments.css";
 import Sidebar from "./sidebar";
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
 
 const AssignmentsQuizzesPage = () => {
   // State variables
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("assignments");
   const [assignments, setAssignments] = useState([]); // State to store assignments
   const [quizzes, setQuizzes] = useState([]); // State to store quizzes
@@ -86,7 +85,7 @@ const AssignmentsQuizzesPage = () => {
     fetchAllAssignments();
     fetchAllQuizzes();
   }, []);
-
+  const navigate = useNavigate();
   return (
     <div className="assignments-quizzes-container">
       <Sidebar />
@@ -146,10 +145,8 @@ const AssignmentsQuizzesPage = () => {
                     <h3>{quiz.title}</h3>
                     <p>{quiz.description}</p>
                     <p className="details">Duration: {quiz.duration}</p>
-                    <button
-                      className="primary-button"
-                      onClick={() => navigate("/quiz", { state: { title: quiz.title } })}
-                    >Start Quiz</button>
+                    <button className="primary-button"
+                    onClick={() => navigate("/quiz", { state: { title: quiz.title } })}>Start Quiz</button>
                   </div>
                 </div>
               ))
