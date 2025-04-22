@@ -5,6 +5,7 @@ import { adminLogin, adminLogout, createAssignment, createCourse, createLesson, 
 import {generateQuizController, getQuizController} from "../controllers/quizController.js";
 import { saveStudentQuizResultController, updateDifficultyController, updateStudentCourseResultController } from "../controllers/studentResultController.js";
 import { updateStudentCourseResult } from "../services/updateStudentCourseResultService.js";
+import { evaluateAssignmentController, generateAssignmentForStudent } from "../controllers/assignmentController.js";
 const router = Router();
 
 router.get('/verify', verifyJWT, (req, res, next) => {
@@ -67,4 +68,7 @@ router.post('/save-result', saveStudentQuizResultController); // Route to save s
 router.route("/getquiz").post(getQuizController);
 router.route("/update-result").post(updateStudentCourseResultController);  
 router.post('/update-difficulty', updateDifficultyController); // Route to update the difficulty level of a student based on their performance
+router.post("/evaluate-assignment", evaluateAssignmentController); // Route to evaluate an assignment using Groq API
+router.post("/update-student-course-result", updateStudentCourseResult); // Route to update student course result based on their performance
+router.post("/generate-assignment-for-student", generateAssignmentForStudent); // Route to generate an assignment for a student using Groq API
 export default router;
