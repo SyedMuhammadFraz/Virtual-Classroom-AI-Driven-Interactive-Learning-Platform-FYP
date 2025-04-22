@@ -4,7 +4,6 @@ import { updateStudentCourseResult } from "../services/updateStudentCourseResult
 
 export const saveStudentQuizResultController = async (req, res) => {
   const {
-    studentId,
     quizTemplateId,
     totalScore,
     scorePercentage,
@@ -15,7 +14,6 @@ export const saveStudentQuizResultController = async (req, res) => {
 
   // Validate required fields
   if (
-    !studentId ||
     !quizTemplateId ||
     !questionsAnswered ||
     !completionStatus
@@ -29,7 +27,7 @@ export const saveStudentQuizResultController = async (req, res) => {
   try {
     // Create a new student quiz result entry
     const newQuizResult = await StudentQuizResult.create({
-      student_id: studentId,
+      student_id: req.user.id,
       quiz_template_id: quizTemplateId || null, // quiz_template_id is optional
       total_score: totalScore || null, // Optional
       score_percentage: scorePercentage || null, // Optional

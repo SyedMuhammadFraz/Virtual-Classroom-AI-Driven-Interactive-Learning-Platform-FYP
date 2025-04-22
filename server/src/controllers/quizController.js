@@ -1,30 +1,38 @@
 import { generateQuizFromLlama } from '../services/groqQuizGen.js';
 import { saveQuizQuestionsToDatabase, getQuizQuestionsFromDatabase } from '../services/QuizQuestionService.js';
-
+import QuizQuestion from "../models/quizQuestionModel.js";
 export const generateQuizController = async (req, res) => {
-  const { lessonId, lessonName, difficulty, course, studentId, quizTemplateId } = req.body;
-
+  const { lessonId, lessonName, difficulty, course, quizTemplateId } = req.body;
+  console.log(req.body);
   // Validate required fields
-  if (!lessonId || !lessonName || !difficulty || !course || !studentId || !quizTemplateId) {
-    return res.status(400).json({ error: 'All fields (lessonId, lessonName, difficulty, course, studentId, quizTemplateId) are required' });
+  if (!lessonId || !lessonName || !difficulty || !course || !quizTemplateId) {
+    return res.status(400).json({ error: 'All fields (lessonId, lessonName, difficulty, course, quizTemplateId) are required' });
   }
 
   try {
+    const existingQuiz = await QuizQuestion.findOne({ where: {  quiz_template_id: quizTemplateId,
+      student_id: req.user.id } });
+
+    // If the quiz already exists, return the existing quiz
+    if (existingQuiz) {
+      return res.status(200).json({ message: 'Quiz already generated', quiz: existingQuiz.questions });
+    }
     // Generate the quiz using the Llama model
     const result = await generateQuizFromLlama(lessonId, lessonName, difficulty, course);
-
+    
     if (!result.success) {
       return res.status(500).json({
         error: result.error || 'Unknown error',
         rawContent: result.rawContent || null
       });
     }
-
+    console.log(result.quiz);
     // Save the generated quiz questions to the database
-    await saveQuizQuestionsToDatabase(lessonId, studentId, quizTemplateId, difficulty, {
+    await saveQuizQuestionsToDatabase(lessonId, req.user.id, quizTemplateId, difficulty, {
       lessonName: lessonName,
-      questions: result.quiz,  // Pass the questions from Llama
+      questions: result.quiz,  // result.quiz contains the questions
     });
+
 
     // Respond with the generated quiz
     res.json({ quiz: result.quiz });
@@ -34,20 +42,21 @@ export const generateQuizController = async (req, res) => {
 };
 
 export const getQuizController = async (req, res) => {
-  const { studentId, quizTemplateId } = req.query;
+
+  const {quizTemplateId } = req.body;
 
   // Validate required query parameters
-  if (!studentId || !quizTemplateId) {
+  if (!quizTemplateId) {
     return res.status(400).json({
-      error: 'Query parameters studentId and quizTemplateId are required'
+      error: 'Query parameters  quizTemplateId are required'
     });
   }
 
   try {
-    const questions = await getQuizQuestionsFromDatabase(studentId, quizTemplateId);
+    const questions = await getQuizQuestionsFromDatabase(req.user.id, quizTemplateId);
 
     if (!questions) {
-      return res.status(404).json({ error: 'Quiz not found' });
+      return res.status(404).json({ error: 'Quiz not found ' });
     }
 
     res.status(200).json({ quiz: questions });

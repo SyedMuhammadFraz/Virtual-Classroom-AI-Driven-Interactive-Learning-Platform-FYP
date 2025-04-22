@@ -131,7 +131,23 @@ import jwt from "jsonwebtoken";
       .status(200)
       .json(new apiResponse(200, existingCourse.id, "Course ID fetched successfully"));
   });
-  
+  const getCourseName = asyncHandler(async (req, res) => {
+
+    const { id } = req.body;
+    if(!(id)){
+
+        throw new apiError(401,"Course Id is Required")
+    }
+    const existingCourse = await Course.findOne({ where: { id } });
+    if(!existingCourse){
+
+        throw new apiError(401,"Course Not Found")
+    }
+
+    return res
+      .status(200)
+      .json(new apiResponse(200, existingCourse.name, "Course Name fetched successfully"));
+  });
   const getCourseIdfromLId = asyncHandler(async (req, res) => {
 
     const { id } = req.body;
@@ -539,5 +555,6 @@ const createQuiz = asyncHandler(async (req, res) => {
    getQuizId,
    updateQuiz,
    deleteQuiz,
-   getCourseIdfromLId
+   getCourseIdfromLId,
+   getCourseName
   }

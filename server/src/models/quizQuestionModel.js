@@ -16,7 +16,7 @@ const QuizQuestion = sequelize.define('QuizQuestion', {
     type: DataTypes.INTEGER,
     allowNull: false, // quiz_template_id is required
     references: {
-      model: 'quiz_templates', // The name of the referenced table
+      model: 'quizzes', // The name of the referenced table
       key: 'id',               // The column in the referenced table that the foreign key points to
     },
   },

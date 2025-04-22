@@ -660,24 +660,8 @@ const AdminDashboard = () => {
 
         console.error("Error in fetching the id", error.message)
       }
-      try {
 
-        const response = await axios.post(
-          "http://localhost:5000/api/v1/users/getcid",  // Change the endpoint if needed
-          {
-            id: lId
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Send token in Authorization header
-            }
-          }
-        );
-        cId = response.data.data;
-      } catch (error) {
-
-        console.error("Error in fetching the id", error.message)
-      }
+       
       try {
 
         let dueDate = ""; // This comes from user input
@@ -687,7 +671,7 @@ const AdminDashboard = () => {
         const response = await axios.post(
           "http://localhost:5000/api/v1/users/addassignment",
           {
-            course_id: cId,
+            
             lesson_id: lId,
             title: assignmentTitle,
             description: assignmentDescription,

@@ -10,6 +10,52 @@ const AssignmentsQuizzesPage = () => {
   const [activeTab, setActiveTab] = useState("assignments");
   const [assignments, setAssignments] = useState([]); // State to store assignments
   const [quizzes, setQuizzes] = useState([]); // State to store quizzes
+  const getCourseTitleById = async (lesson_id) => {
+    try {
+
+      const courseId = await getCourseId(lesson_id);
+  
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/users/getcoursesName",
+        { id: courseId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      return response.data.data; // assuming course title is in `data`
+    } catch (error) {
+      console.error("Error fetching course name:", error.response?.data?.message || error.message);
+      throw error;
+    }
+  };
+  
+  const getCourseId = async (lesson_id) => {
+    try {
+      if (!lesson_id) {
+        throw new Error("Lesson ID is missing!");
+      }
+  
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/users/getcourseidfromlid",
+        { id: lesson_id }, // Make sure this is the correct key expected by backend
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching course ID:", error.response?.data?.message || error.message);
+      throw error;
+    }
+  };
+  
+  
 
   // Fetch all assignments
   const fetchAllAssignments = async () => {
@@ -145,8 +191,51 @@ const AssignmentsQuizzesPage = () => {
                     <h3>{quiz.title}</h3>
                     <p>{quiz.description}</p>
                     <p className="details">Duration: {quiz.duration}</p>
-                    <button className="primary-button"
-                    onClick={() => navigate("/quiz", { state: { title: quiz.title } })}>Start Quiz</button>
+                    <button
+                      className="primary-button"
+                      onClick={async () => {
+                        try {
+                         
+                          toast.info("Please wait, starting your quiz...");
+                          // 1. First fetch the course title
+                          const courseTitle = await getCourseTitleById(quiz.lesson);
+                          const token = localStorage.getItem("accessToken"); 
+                          // 2. Now generate the quiz
+                          const response = await axios.post("http://localhost:5000/api/v1/users/generateQuiz", {
+                            lessonId: quiz.lesson,
+                            lessonName: quiz.title,
+                            difficulty: 5,
+                            course: courseTitle,
+                            quizTemplateId: quiz.id
+                          }, {
+                            headers: {
+                              "Content-Type": "application/json",
+                              "Authorization": `Bearer ${token}` // Include the access token here
+                            }
+                          });
+                      
+                          const data = response.data;
+                      
+                          // Navigate to quiz page with generated quiz
+                          navigate("/quiz", {
+                            state: {
+                              title: quiz.title,
+                              id: quiz.id,
+                              questions: data.quiz,
+                            },
+                          });
+                      
+                          toast.dismiss();
+                        } catch (error) {
+                          console.error("Error:", error.response?.data?.error || error.message);
+                          alert(error.response?.data?.error || "Failed to generate quiz");
+                          toast.dismiss();
+                        }
+                      }}
+                      >
+                        Start Quiz
+                      </button>
+                      
                   </div>
                 </div>
               ))

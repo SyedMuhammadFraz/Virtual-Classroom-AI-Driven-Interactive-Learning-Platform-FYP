@@ -23,7 +23,7 @@ Return ONLY the quiz as a raw JSON array in this format (no explanation, no mark
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        Authorization: "Bearer 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",
       },
       body: JSON.stringify({
         model: "llama3-70b-8192",

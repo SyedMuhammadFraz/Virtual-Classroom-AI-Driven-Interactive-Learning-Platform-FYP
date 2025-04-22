@@ -2,14 +2,15 @@ import QuizQuestion from "../models/quizQuestionModel.js"; // Import your model
 import { QueryTypes } from 'sequelize';
 import sequelize from "../db/db.js";
 
-export const saveQuizQuestionsToDatabase = async (
-  lessonId,
-  studentId,
-  quizTemplateId,
-  difficultyLevel,
-  quizData
-) => {
+
+// Controller function to save quiz questions to the database
+export const saveQuizQuestionsToDatabase = async (lessonId, studentId, quizTemplateId, difficultyLevel, quizData) => {
   try {
+    // Validate the incoming quiz data
+    if (!quizData || !quizData.questions || quizData.questions.length === 0) {
+      throw new Error('Invalid quiz data: questions cannot be empty');
+    }
+
     // Structure the quiz data to be saved in the database
     const quizQuestions = {
       student_id: studentId,
@@ -20,14 +21,19 @@ export const saveQuizQuestionsToDatabase = async (
       updated_at: new Date(),
     };
 
-    // Insert the quiz questions into the database
+    // Save the quiz questions to the database
     await QuizQuestion.create(quizQuestions);
     console.log("Quiz questions saved successfully!");
+    
+    return {
+      message: 'Quiz questions saved successfully',
+    };
   } catch (error) {
     console.error("Error saving quiz questions to the database:", error);
-    throw error; // Re-throw error to handle it in the caller
+    throw new Error('Error saving quiz questions to the database');
   }
 };
+
 
 
 export const getQuizQuestionsFromDatabase = async (studentId, quizTemplateId) => {
