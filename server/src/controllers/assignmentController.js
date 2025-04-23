@@ -1,3 +1,4 @@
+import { updateStudentAssignmentScore } from "../services/assignmentDB.service.js";
 import { evaluateAssignmentWithLlama } from "../services/groqAssignmentEvaluator.js";
 import { generateAssignmentServiceForStudent } from "../services/insertAssignment.service.js";
 
@@ -32,7 +33,7 @@ async function generateAssignmentForStudent(req, res) {
 
 async function evaluateAssignmentController(req, res) {
   try {
-    const { sourceCode, questionPrompt, expectedOutput } = req.body;
+    const { sourceCode, questionPrompt, expectedOutput, student_id, assignment_template_id } = req.body;
 
     if (!sourceCode || !questionPrompt) {
       return res.status(400).json({
@@ -47,7 +48,25 @@ async function evaluateAssignmentController(req, res) {
       expectedOutput
     );
 
-    return res.status(result.success ? 200 : 500).json(result);
+    if (!result.success) {
+      return res
+        .status(500)
+        .json({ message: "Evaluation failed", error: result.error });
+    }
+
+    // Update the student's assignment with the score
+    await updateStudentAssignmentScore({
+      student_id,
+      assignment_template_id,
+      score: result.score,
+    });
+
+    return res.status(200).json({
+      message: "Assignment evaluated and score updated",
+      score: result.score,
+      feedback: result.feedback,
+      wouldPassTests: result.wouldPassTests,
+    });
   } catch (error) {
     console.error("Assignment evaluation failed:", error);
     return res.status(500).json({
