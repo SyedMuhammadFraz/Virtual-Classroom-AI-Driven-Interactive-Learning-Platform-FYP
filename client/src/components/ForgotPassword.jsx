@@ -1,27 +1,57 @@
 import React, { useState } from "react";
 import "../styles/ForgotPassword.css";
-import axios from 'axios';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
-  const handleSendOtp = () => {
-    if (!email.includes("@")) {
-      setError("Please enter a valid email address");
-      return;
-    }
+  const handleResetPassword = async () => {
     setError("");
-    setOtpSent(true);
-    // Simulate sending OTP (Replace with API call)
-    setTimeout(() => alert("OTP sent to your email!"), 500);
+    setSuccess("");
+
+    if (!email.includes("@")) {
+      return setError("Please enter a valid email address.");
+    }
+    if (newPassword.length < 6) {
+      return setError("Password must be at least 6 characters long.");
+    }
+    if (newPassword !== confirmPassword) {
+      return setError("Passwords do not match.");
+    }
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/v1/users/forgetpassword", {
+        email,
+        newPassword
+      });
+
+      if (res.data.success) {
+        setSuccess("Password reset successfully! You can now login.");
+        setEmail("");
+        setNewPassword("");
+        setConfirmPassword("");
+        toast.success("Passwrod changed Successfully. Redirecting to Sign In Page..!")
+        navigate("/signin")
+        
+      } else {
+        setError("Failed to reset password. Please try again.");
+      }
+    } catch (err) {
+      setError("An error occurred while resetting the password.");
+    }
   };
 
   return (
     <div className="forgot-password-container">
       <div className="forgot-password-card">
-        <h2>Forgot Password?</h2>
-        <p>Enter your email, and we will send you an OTP to reset your password.</p>
+        <h2>Reset Password</h2>
+        <p>Enter your email and set a new password.</p>
 
         <input
           type="email"
@@ -30,13 +60,29 @@ const ForgotPassword = () => {
           onChange={(e) => setEmail(e.target.value)}
           className="input-field"
         />
+
+        <input
+          type="password"
+          placeholder="New Password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="input-field"
+        />
+
+        <input
+          type="password"
+          placeholder="Confirm New Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="input-field"
+        />
+
         {error && <p className="error-text">{error}</p>}
+        {success && <p className="success-text">{success}</p>}
 
-        <button className="send-otp-btn" onClick={handleSendOtp}>
-          {otpSent ? "Resend OTP" : "Send OTP"}
+        <button className="send-otp-btn" onClick={handleResetPassword}>
+          Reset Password
         </button>
-
-        {otpSent && <p className="otp-message">An OTP has been sent to your email.</p>}
 
         <a href="/signin" className="back-to-login">Back to Login</a>
       </div>

@@ -482,6 +482,23 @@ const createQuiz = asyncHandler(async (req, res) => {
       .status(200)
       .json(new apiResponse(200, existingQuiz.id, "Quiz ID fetched successfully"));
   });
+  const getQuizName = asyncHandler(async (req, res) => {
+
+    const { id } = req.body;
+    if(!(id)){
+
+        throw new apiError(401,"Quiz Id is Required")
+    }
+    const existingQuiz = await Quiz.findOne({ where: { id } });
+    if(!existingQuiz){
+
+        throw new apiError(401,"Quiz Not Found")
+    }
+
+    return res
+      .status(200)
+      .json(new apiResponse(200, existingQuiz.title, "Quiz title fetched successfully"));
+  });
   const updateQuiz = asyncHandler(async (req, res) => {
 
     const { oldtitle,title } = req.body;
@@ -556,5 +573,6 @@ const createQuiz = asyncHandler(async (req, res) => {
    updateQuiz,
    deleteQuiz,
    getCourseIdfromLId,
-   getCourseName
+   getCourseName,
+   getQuizName
   }
