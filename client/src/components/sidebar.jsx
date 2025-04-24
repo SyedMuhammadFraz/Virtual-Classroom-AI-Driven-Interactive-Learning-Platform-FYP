@@ -28,11 +28,11 @@ export const HandleLogout = async (navigate) => {
       console.log(accessToken),
       "http://localhost:5000/api/v1/users/logout",
       {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // Send token in Authorization header
-        } 
-      }
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${accessToken}`, // Send token in Authorization header
+      //   } 
+      // }
     );
 
     // Handle successful logout
