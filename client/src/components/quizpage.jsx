@@ -15,7 +15,6 @@ const Quizpage = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [studentAnswers, setStudentAnswers] = useState([]); // Use an array to store answers
-  const [totalScore, setTotalScore] = useState(0);
   const navigate = useNavigate();
   useEffect(() => {
     const timer = setInterval(() => {
@@ -119,11 +118,6 @@ const Quizpage = () => {
       const studentAnswer = studentAnswers[index];  // Using index to access student’s answer
       const isCorrect = studentAnswer === question.answer;  // Check if the answer matches
 
-      console.log(`Question Index: ${index}`);
-      console.log(`Student Answer: ${studentAnswer}`);
-      console.log(`Correct Answer: ${question.answer}`);
-      console.log(`Is Correct: ${isCorrect}`);
-
       if (isCorrect) {
         score++;  // Increment score if correct
       }
@@ -135,9 +129,6 @@ const Quizpage = () => {
       });
     });
     const percentage = (score / questions.length) * 100;
-    console.log(`Final Score: ${score}`);
-    console.log(`Final Percentage: ${percentage}`);
-    console.log(`Questions Answered: ${JSON.stringify(questionsAnswered)}`);
 
     // Prepare the data to send to the backend
     const quizResultData = {
@@ -161,7 +152,7 @@ const Quizpage = () => {
           },
         }
       );
-      toast.success(response.data.message);
+      toast.success(response.data.message +"You can track your Result from Progress Page.");
       navigate("/dashboard") 
     } catch (error) {
       toast.error("Error submitting quiz: " + (error.response?.data?.message || error.message));

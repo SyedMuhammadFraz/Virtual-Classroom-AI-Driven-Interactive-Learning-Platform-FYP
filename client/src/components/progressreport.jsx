@@ -1,27 +1,65 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import "../styles/progressreport.css";
 import Sidebar from "./sidebar";
 
 const ProgressReportPage = () => {
-  const courses = [
-    { name: "Arrays", progress: 80, grade: "A" },
-    { name: "SQL", progress: 60, grade: "B" },
-    { name: "Normalization", progress: 90, grade: "A+" },
-    { name: "Pointers", progress: 70, grade: "B+" },
-  ];
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        // Step 1: Get quiz results (quiz_template_id + score_percentage)
+        const { data } = await axios.post("http://localhost:5000/api/v1/users/getquizresult", {}, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}` 
+          }
+        });
+
+        const quizResults = data.data;
+
+        // Step 2: For each result, fetch quiz title
+        const courseData = await Promise.all(quizResults.map(async (result) => {
+          const titleRes = await axios.post("http://localhost:5000/api/v1/users/getquiztitle", {
+            id: result.quiz_template_id
+          });
+          return {
+            name: titleRes.data.data, // Update based on your backend response key
+            progress: result.score_percentage,
+            grade: getGrade(result.score_percentage)
+          };
+        }));
+
+        setCourses(courseData);
+      } catch (error) {
+        console.error("Failed to load progress data", error);
+      }
+    };
+
+    fetchProgress();
+  }, []);
+
+  const getGrade = (percentage) => {
+    if (percentage >= 90) return "A+";
+    if (percentage >= 80) return "A";
+    if (percentage >= 70) return "B+";
+    if (percentage >= 60) return "B";
+    if (percentage >= 50) return "C+";
+    if (percentage >= 40) return "D+";
+    if (percentage <= 30) return "F";
+    return "C";
+  };
 
   return (
     <div className="progress-report-container">
       <Sidebar/>
 
-      {/* Header */}
       <header className="header">
         <h1>Your <span className="highlight">Progress Report</span></h1>
         <p>Track your learning journey and see where you stand!</p>
       </header>
 
-      {/* Progress Section */}
       <div className="progress-section">
         {courses.map((course, index) => (
           <div key={index} className="courses-card">
@@ -38,7 +76,6 @@ const ProgressReportPage = () => {
         ))}
       </div>
 
-      {/* Performance Graph */}
       <div className="performance-graph">
         <h2>Performance Over Time</h2>
         <ResponsiveContainer width="100%" height={300}>

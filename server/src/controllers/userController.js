@@ -196,7 +196,7 @@ import moment from "moment";
       );
     });
     const forgetPassword = asyncHandler(async (req, res) => {
-      const { email } = req.body;
+      const { email , newPassword} = req.body;
     
       if (!( email )) {
         throw new apiError(400, "All the fields are required");
@@ -210,12 +210,12 @@ import moment from "moment";
         throw new apiError(404, "User doesn't exist");
     }
     
-      // user.password_hash = await bcrypt.hash(newPassword, 10); 
+      user.password_hash = await bcrypt.hash(newPassword, 10); 
     
-      // await user.save({ validateBeforeSave: false });
+      await user.save({ validateBeforeSave: false });
     
       return res.status(200).json(
-        new apiResponse(200, "Email found Successfully")
+        new apiResponse(200, "Password changed Successfully")
       );
     });
     

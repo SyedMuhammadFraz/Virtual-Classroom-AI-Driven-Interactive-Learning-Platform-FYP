@@ -99,3 +99,22 @@ export const updateDifficultyController = async (req, res) => {
     res.status(500).json({ error: 'Failed to update difficulty level' });
   }
 };
+export const getquizPercentage = async (req, res) => {
+  try {
+    
+
+    // Replace this with your actual DB query logic
+    const results = await StudentQuizResult.findAll({
+      where: { student_id: req.user.id },
+      attributes: ['quiz_template_id', 'score_percentage'],
+    });
+
+    res.status(200).json({
+      message: 'Quiz results fetched successfully.',
+      data: results,
+    });
+  } catch (error) {
+    console.error('Error fetching quiz results:', error);
+    res.status(500).json({ error: 'Failed to fetch quiz results' });
+  }
+};
