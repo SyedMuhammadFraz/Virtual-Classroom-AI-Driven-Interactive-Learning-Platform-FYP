@@ -36,6 +36,7 @@ const Quizpage = () => {
     const fetchQuiz = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
+        console.log(accessToken)
         if (!accessToken) {
           toast.error("No access token found. Please log in.");
           return;
