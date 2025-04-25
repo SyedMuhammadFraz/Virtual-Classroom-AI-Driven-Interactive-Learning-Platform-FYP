@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+} from "recharts";
 import "../styles/progressreport.css";
 import Sidebar from "./sidebar";
 
@@ -10,28 +12,63 @@ const ProgressReportPage = () => {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        // Step 1: Get quiz results (quiz_template_id + score_percentage)
-        const { data } = await axios.post("http://localhost:5000/api/v1/users/getquizresult", {}, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}` 
+        const token = localStorage.getItem("accessToken");
+
+        // --- Step 1: Fetch quiz results ---
+        const { data: quizData } = await axios.post(
+          "http://localhost:5000/api/v1/users/getquizresult",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
 
-        const quizResults = data.data;
+        const quizResults = await Promise.all(
+          quizData.data.map(async (result) => {
+            const titleRes = await axios.post(
+              "http://localhost:5000/api/v1/users/getquiztitle",
+              { id: result.quiz_template_id }
+            );
 
-        // Step 2: For each result, fetch quiz title
-        const courseData = await Promise.all(quizResults.map(async (result) => {
-          const titleRes = await axios.post("http://localhost:5000/api/v1/users/getquiztitle", {
-            id: result.quiz_template_id
-          });
-          return {
-            name: titleRes.data.data, // Update based on your backend response key
-            progress: result.score_percentage,
-            grade: getGrade(result.score_percentage)
-          };
-        }));
+            return {
+              name: titleRes.data.data,
+              progress: result.score_percentage,
+              grade: getQuizGrade(result.score_percentage),
+              type: "Quiz"
+            };
+          })
+        );
 
-        setCourses(courseData);
+        // --- Step 2: Fetch assignment scores ---
+        const { data: assignmentData } = await axios.post(
+          "http://localhost:5000/api/v1/users/getassignmentscore",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const assignmentResults = await Promise.all(
+          assignmentData.data.map(async (result) => {
+            const titleRes = await axios.post(
+              "http://localhost:5000/api/v1/users/getassignmenttitle",
+              { id: result.assignment_template_id }
+            );
+
+            return {
+              name: titleRes.data.data,
+              progress: result.score,
+              grade: getAssignmentGrade(result.score),
+              type: "Assignment"
+            };
+          })
+        );
+
+        setCourses([...quizResults, ...assignmentResults]);
       } catch (error) {
         console.error("Failed to load progress data", error);
       }
@@ -40,7 +77,8 @@ const ProgressReportPage = () => {
     fetchProgress();
   }, []);
 
-  const getGrade = (percentage) => {
+  // Grading logic for quiz (percentage)
+  const getQuizGrade = (percentage) => {
     if (percentage >= 90) return "A+";
     if (percentage >= 80) return "A";
     if (percentage >= 70) return "B+";
@@ -51,10 +89,20 @@ const ProgressReportPage = () => {
     return "C";
   };
 
+  // Grading logic for assignments (1-10)
+  const getAssignmentGrade = (score) => {
+    if (score >= 9) return "A+";
+    if (score >= 8) return "A";
+    if (score >= 7) return "B+";
+    if (score >= 6) return "B";
+    if (score >= 5) return "C+";
+    if (score >= 4) return "D+";
+    return "F";
+  };
+
   return (
     <div className="progress-report-container">
-      <Sidebar/>
-
+      <Sidebar />
       <header className="header">
         <h1>Your <span className="highlight">Progress Report</span></h1>
         <p>Track your learning journey and see where you stand!</p>
@@ -63,14 +111,11 @@ const ProgressReportPage = () => {
       <div className="progress-section">
         {courses.map((course, index) => (
           <div key={index} className="courses-card">
-            <h3>{course.name}</h3>
+            <h3>{course.name} ({course.type})</h3>
             <div className="progress-bar">
-              <div
-                className="progress"
-                style={{ width: `${course.progress}%` }}
-              ></div>
+              <div className="progress" style={{ width: `${course.progress * (course.type === "Assignment" ? 10 : 1)}%` }}></div>
             </div>
-            <p className="details">Progress: {course.progress}%</p>
+            <p className="details">Score: {course.progress}{course.type === "Quiz" ? "%" : "/10"}</p>
             <p className="grade">Grade: {course.grade}</p>
           </div>
         ))}

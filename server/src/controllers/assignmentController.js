@@ -1,12 +1,12 @@
 import { updateStudentAssignmentScore } from "../services/assignmentDB.service.js";
 import { evaluateAssignmentWithLlama } from "../services/groqAssignmentEvaluator.js";
 import { generateAssignmentServiceForStudent, getAssignmentByTemplateId, saveStudentAssignmentSubmission } from "../services/Assignment.service.js";
-
+import StudentAssignment from "../models/studentAssignment.js"
 async function generateAssignmentForStudent(req, res) {
-  const { student_id, assignment_template_id } = req.body;
+  const { assignment_template_id } = req.body;
 
   // Basic input validation (you can use a library like Joi or express-validator for more advanced checks)
-  if (!student_id || !assignment_template_id) {
+  if (  !assignment_template_id) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
@@ -15,7 +15,7 @@ async function generateAssignmentForStudent(req, res) {
   try {
     // Call the service to generate the assignment
     const assignment = await generateAssignmentServiceForStudent(
-      student_id,
+      req.user.id,
       assignment_template_id,
     );
 
@@ -34,8 +34,8 @@ async function generateAssignmentForStudent(req, res) {
 
 async function evaluateAssignmentController(req, res) {
   try {
-    const { sourceCode, questionPrompt, expectedOutput, student_id, assignment_template_id } = req.body;
-
+    const { sourceCode, questionPrompt, expectedOutput, assignment_template_id } = req.body;
+    const student_id = req.user.id;
     if (!sourceCode || !questionPrompt) {
       return res.status(400).json({
         success: false,
@@ -102,11 +102,29 @@ const getAssignmentController = async (req, res) => {
     res.status(500).json({ error: "Unexpected error fetching assignment" });
   }
 };
+export const getAssignmentScore = async (req, res) => {
+  try {
+    
 
+    // Replace this with your actual DB query logic
+    const results = await StudentAssignment.findAll({
+      where: { student_id: req.user.id },
+      attributes: ['assignment_template_id', 'score'],
+    });
+
+    res.status(200).json({
+      message: 'Assignment Score fetched successfully.',
+      data: results,
+    });
+  } catch (error) {
+    console.error('Error fetching assignment score:', error);
+    res.status(500).json({ error: 'Failed to fetch Assignment Sscore' });
+  }
+};
 async function submitAssignmentController(req, res) {
   try {
-    const { student_id, assignment_template_id, source_code } = req.body;
-
+    const { assignment_template_id, source_code } = req.body;
+    const student_id = req.user.id;
     if (!assignment_template_id || !source_code) {
       return res.status(400).json({
         error: "assignment_template_id and source_code are required fields.",

@@ -89,8 +89,8 @@
   
   /* Performance Graph Section */
   .performance-graph {
-    margin-top: 40px;
-    text-align: center;
+    margin-top: 80px; /* previously 40px */
+  text-align: center;
   }
   
   .performance-graph h2 {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation,useNavigate } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,8 +13,9 @@ const Quizpage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [studentAnswers, setStudentAnswers] = useState([]); // Use an array to store answers
+  const [studentAnswers, setStudentAnswers] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -30,7 +30,6 @@ const Quizpage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch the quiz questions from the server
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
@@ -42,7 +41,7 @@ const Quizpage = () => {
 
         const response = await axios.post(
           "http://localhost:5000/api/v1/users/getquiz",
-          { quizTemplateId: id }, // send the quiz template ID
+          { quizTemplateId: id },
           {
             headers: {
               "Content-Type": "application/json",
@@ -51,8 +50,8 @@ const Quizpage = () => {
           }
         );
 
-        setQuestions(response.data.quiz); // Assuming the API returns { quiz: [questions] }
-        setLoading(false); // Data loaded, stop loading
+        setQuestions(response.data.quiz);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching quiz:", error);
         toast.error("Failed to fetch quiz. Please try again.");
@@ -79,6 +78,13 @@ const Quizpage = () => {
 
   const handleSubmit = () => {
     if (submitted) return;
+
+    // Check if all questions are answered
+    const unansweredIndex = questions.findIndex((_, index) => !studentAnswers[index]);
+    if (unansweredIndex !== -1) {
+      toast.warn("Please answer all questions before submitting the quiz.");
+      return;
+    }
 
     toast.info(
       ({ closeToast }) => (
@@ -109,38 +115,35 @@ const Quizpage = () => {
     setSubmitted(true);
     toast.success("Quiz submitted successfully! 🚀");
 
-    // Calculate the total score
     let score = 0;
     let questionsAnswered = [];
 
-    // Loop through questions and calculate score
     questions.forEach((question, index) => {
-      const studentAnswer = studentAnswers[index];  // Using index to access student’s answer
-      const isCorrect = studentAnswer === question.answer;  // Check if the answer matches
+      const studentAnswer = studentAnswers[index];
+      const isCorrect = studentAnswer === question.answer;
 
       if (isCorrect) {
-        score++;  // Increment score if correct
+        score++;
       }
 
       questionsAnswered.push({
-        questionId: index, // Using index as the unique identifier
+        questionId: index,
         studentAnswer,
         isCorrect,
       });
     });
+
     const percentage = (score / questions.length) * 100;
 
-    // Prepare the data to send to the backend
     const quizResultData = {
       quizTemplateId: id,
       totalScore: score,
-      scorePercentage:percentage,
+      scorePercentage: percentage,
       questionsAnswered,
-      timeTaken: 5 * 60 - timeLeft, // Time taken in seconds
+      timeTaken: 5 * 60 - timeLeft,
       completionStatus: "completed",
     };
 
-    // Call the API to save the quiz result
     try {
       const response = await axios.post(
         "http://localhost:5000/api/v1/users/save-result",
@@ -152,8 +155,8 @@ const Quizpage = () => {
           },
         }
       );
-      toast.success(response.data.message +"You can track your Result from Progress Page.");
-      navigate("/dashboard") 
+      toast.success(response.data.message + " You can track your Result from Progress Page.");
+      navigate("/dashboard");
     } catch (error) {
       toast.error("Error submitting quiz: " + (error.response?.data?.message || error.message));
     }
@@ -163,7 +166,7 @@ const Quizpage = () => {
     if (!submitted) {
       setSubmitted(true);
       toast.warn("Time's up! Quiz auto-submitted. ⏰");
-      confirmSubmit(() => {});
+      confirmSubmit(() => { });
     }
   };
 
@@ -189,10 +192,10 @@ const Quizpage = () => {
                   <label key={optionIndex} className="option-label">
                     <input
                       type="radio"
-                      name={`question-${q.id}`}
+                      name={`question-${index}`}
                       value={option}
-                      checked={studentAnswers[index] === option}  // Check if the option is selected
-                      onChange={() => handleAnswerChange(index, option)} // Use index here
+                      checked={studentAnswers[index] === option}
+                      onChange={() => handleAnswerChange(index, option)}
                     />
                     {option}
                   </label>

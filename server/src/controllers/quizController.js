@@ -10,13 +10,6 @@ export const generateQuizController = async (req, res) => {
   }
 
   try {
-    const existingQuiz = await QuizQuestion.findOne({ where: {  quiz_template_id: quizTemplateId,
-      student_id: req.user.id } });
-
-    // If the quiz already exists, return the existing quiz
-    if (existingQuiz) {
-      return res.status(200).json({ message: 'Quiz already generated', quiz: existingQuiz.questions });
-    }
     // Generate the quiz using the Llama model
     const result = await generateQuizFromLlama(lessonId, lessonName, difficulty, course);
     
@@ -28,7 +21,7 @@ export const generateQuizController = async (req, res) => {
     }
     console.log(result.quiz);
     // Save the generated quiz questions to the database
-    await saveQuizQuestionsToDatabase(lessonId, req.user.id, quizTemplateId, difficulty, {
+    await saveQuizQuestionsToDatabase(lessonId, req.user.id, quizTemplateId, {
       lessonName: lessonName,
       questions: result.quiz,  // result.quiz contains the questions
     });
