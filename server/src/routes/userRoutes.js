@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { loginUser,registerUser,logout,refreshAccessToken,updateUserProfile,forgetPassword, getUserProfile } from "../controllers/userController.js";
 import { verifyJWT,verifyAdminJWT } from "../middlewares/auth.middleware.js";
-import { adminLogin, adminLogout, createAssignment, createCourse, createLesson, createQuiz, deleteAssignment, deleteCourse, deleteLesson, deleteQuiz, getAllAssignments, getAllCourses, getAllLessons, getAllQuizes, getAssignmentId, getCourseId, getCourseIdfromLId, getCourseName, getLessonId, getQuizId, getQuizName, refreshAdminAccessToken, updateAssignment, updateCourse, updateLesson, updateQuiz } from "../controllers/adminController.js";
+import { adminLogin, adminLogout, createAssignment, createCourse, createLesson, createQuiz, deleteAssignment, deleteCourse, deleteLesson, deleteQuiz, getAllAssignments, getAllCourses, getAllLessons, getAllQuizes, getAssignmentId, getAssignmenttitle, getCourseId, getCourseIdfromLId, getCourseName, getLessonId, getQuizId, getQuizName, refreshAdminAccessToken, updateAssignment, updateCourse, updateLesson, updateQuiz } from "../controllers/adminController.js";
 import {generateQuizController, getQuizController} from "../controllers/quizController.js";
 import { getquizPercentage, saveStudentQuizResultController, updateDifficultyController, updateStudentCourseResultController } from "../controllers/studentResultController.js";
 import { updateStudentCourseResult } from "../services/updateStudentCourseResultService.js";
-import { evaluateAssignmentController, generateAssignmentForStudent, getAssignmentController, submitAssignmentController } from "../controllers/assignmentController.js";
+import { evaluateAssignmentController, generateAssignmentForStudent, getAssignmentController, getAssignmentScore, submitAssignmentController } from "../controllers/assignmentController.js";
 import { saveStudentAssignmentSubmission } from "../services/Assignment.service.js";
 const router = Router();
 
@@ -35,7 +35,7 @@ router.get('/verifyadmin', verifyAdminJWT, (req, res, next) => {
 
 router.route("/register").post(registerUser)
 router.route("/login").post(loginUser)
-router.route("/logout").post(verifyJWT,logout);
+router.route("/logout").post(verifyJWT,logout)
 router.route("/updateprofile").post(verifyJWT,updateUserProfile)
 router.route("/getuserdetails").get(verifyJWT,getUserProfile)
 router.route("/refresh-token").post(refreshAccessToken)
@@ -65,6 +65,7 @@ router.route("/addquiz").post(verifyAdminJWT,createQuiz)
 router.route("/getquizes").post(getAllQuizes)
 router.route("/getquizid").post(verifyAdminJWT,getQuizId)
 router.route("/getquiztitle").post(getQuizName)
+router.route("/getassignmenttitle").post(getAssignmenttitle)
 router.route("/updatequiz").post(verifyAdminJWT,updateQuiz)
 router.route("/deletequiz").post(verifyAdminJWT,deleteQuiz)
 router.route("/getcid").post(verifyAdminJWT,getCourseIdfromLId)
@@ -72,11 +73,12 @@ router.post('/generateQuiz', verifyJWT,generateQuizController); // Route to gene
 router.post('/save-result', verifyJWT, saveStudentQuizResultController); // Route to save student's quiz result
 router.route("/getquiz").post(verifyJWT,getQuizController);
 router.route("/getquizresult").post(verifyJWT,getquizPercentage);
+router.route("/getassignmentscore").post(verifyJWT,getAssignmentScore);
 router.route("/update-result").post(updateStudentCourseResultController);  
 router.post('/update-difficulty', updateDifficultyController); // Route to update the difficulty level of a student based on their performance
-router.post("/evaluate-assignment", evaluateAssignmentController); // Route to evaluate an assignment using Groq API
+router.post("/evaluate-assignment",verifyJWT, evaluateAssignmentController); // Route to evaluate an assignment using Groq API
 router.post("/update-student-course-result", updateStudentCourseResult); // Route to update student course result based on their performance
-router.post("/generate-assignment-for-student", generateAssignmentForStudent); // Route to generate an assignment for a student using Groq API
+router.post("/generate-assignment-for-student", verifyJWT,generateAssignmentForStudent); // Route to generate an assignment for a student using Groq API
 router.post("/get-assignment", getAssignmentController); // Route to get assignment details for a student using Groq API
-router.post("/submit-assignment-result", submitAssignmentController); // Route to save student's assignment result
+router.post("/submit-assignment-result", verifyJWT,submitAssignmentController); // Route to save student's assignment result
 export default router;

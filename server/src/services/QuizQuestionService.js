@@ -1,6 +1,7 @@
 import QuizQuestion from "../models/quizQuestionModel.js"; // Import your model
 import { QueryTypes } from 'sequelize';
 import sequelize from "../db/db.js";
+import { getStudentDifficultyLevel } from "./User.service.js";
 
 
 // Controller function to save quiz questions to the database
@@ -10,9 +11,14 @@ export const saveQuizQuestionsToDatabase = async (lessonId, studentId, quizTempl
     if (!quizData || !quizData.questions || quizData.questions.length === 0) {
       throw new Error('Invalid quiz data: questions cannot be empty');
     }
+    console.log('Valid quiz data:', quizData.questions);
 
     // Fetch difficulty level from user table
-    const difficulty_level_student = await getStudentDifficultyLevel(student_id);
+    const difficulty_level_student = await getStudentDifficultyLevel(studentId)
+    if (!difficulty_level_student) {
+      throw new Error('Unable to fetch difficulty level for the student');
+    }
+    console.log('Difficulty level fetched:', difficulty_level_student);
 
     // Structure the quiz data to be saved in the database
     const quizQuestions = {

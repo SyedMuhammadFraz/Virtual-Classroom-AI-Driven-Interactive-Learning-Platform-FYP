@@ -171,7 +171,7 @@ const Sidebar = () => {
         <li>
           <Link to="/assignment">
             <FaClipboardList className="sidebar-icon" />
-            <span>Assignment</span>
+            <span>Assignments & Quizzes</span>
           </Link>
         </li>
         <li>

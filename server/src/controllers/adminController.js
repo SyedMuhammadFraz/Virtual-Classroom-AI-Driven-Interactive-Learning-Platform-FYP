@@ -380,6 +380,23 @@ const createAssignment = asyncHandler(async (req, res) => {
       .status(200)
       .json(new apiResponse(200, existingAssignment.id, "Assignment ID fetched successfully"));
   });
+  const getAssignmenttitle = asyncHandler(async (req, res) => {
+
+    const { id } = req.body;
+    if(!(id)){
+
+        throw new apiError(401,"Assignment Id is Required")
+    }
+    const existingAssignment = await Assignment.findOne({ where: { id } });
+    if(!existingAssignment){
+
+        throw new apiError(401,"Assignment Not Found")
+    }
+
+    return res
+      .status(200)
+      .json(new apiResponse(200, existingAssignment.title, "Assignment Title fetched successfully"));
+  });
   const updateAssignment = asyncHandler(async (req, res) => {
 
     const { oldtitle,title } = req.body;
@@ -574,5 +591,6 @@ const createQuiz = asyncHandler(async (req, res) => {
    deleteQuiz,
    getCourseIdfromLId,
    getCourseName,
-   getQuizName
+   getQuizName,
+   getAssignmenttitle
   }

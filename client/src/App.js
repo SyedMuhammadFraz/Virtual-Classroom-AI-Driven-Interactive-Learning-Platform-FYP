@@ -15,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import Sidebar from "./components/sidebar";
 import PublicRoute from "./utils/PublicRoutes";
 import Quizpage from "./components/quizpage"; // Import the Quizpage component
+import SubmitAssignment from "./components/SubmitAssignment";
 
 const App = () => {
   return (
@@ -127,6 +128,20 @@ const App = () => {
             />
           }
         />
+        <Route
+  path="/submit-assignment"
+  element={
+    <PrivateRoute
+      element={
+        <>
+         
+          <SubmitAssignment />
+        </>
+      }
+      requiredRole="student"
+    />
+  }
+/>
 
         {/* Admin Routes */}
         <Route

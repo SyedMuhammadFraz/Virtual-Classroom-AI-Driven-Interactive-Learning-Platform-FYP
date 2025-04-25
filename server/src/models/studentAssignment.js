@@ -3,9 +3,9 @@ import sequelize from '../db/db.js'; // Adjust the path to your db.js
 
 const StudentAssignment = sequelize.define('student_assignment', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4, // or `sequelize.literal('gen_random_uuid()')` for PG native
+    type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
   },
   student_id: {
     type: DataTypes.INTEGER,

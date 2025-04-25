@@ -1,0 +1,79 @@
+.submit-assignment-page {
+    max-width: 1200px;
+    margin: 20px auto;
+    background: #fff8f0;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .submit-assignment-page h2 {
+    font-size: 2rem;
+    color: #ff6600;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .assignment-section {
+    background: #fff;
+    border: 2px solid #ffcc99;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    transition: 0.3s ease;
+  }
+  
+  .assignment-section:hover {
+    background: #fff3e0;
+    border-color: #ff9900;
+  }
+  
+  .assignment-section h3 {
+    color: #ff6600;
+    margin-bottom: 10px;
+  }
+  
+  .assignment-section p,
+  .assignment-section pre {
+    font-size: 1rem;
+    color: #444;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  
+  textarea {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #ffb84d;
+    padding: 15px;
+    font-size: 1rem;
+    background: #fffaf0;
+    resize: vertical;
+    outline: none;
+    transition: 0.3s ease;
+  }
+  
+  textarea:focus {
+    border-color: #ff9900;
+    background: #fff3e0;
+  }
+  
+  .primary-button {
+    display: block;
+    margin: 20px auto;
+    background-color: #ff6600;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .primary-button:hover {
+    background-color: #e65c00;
+  }
+  
