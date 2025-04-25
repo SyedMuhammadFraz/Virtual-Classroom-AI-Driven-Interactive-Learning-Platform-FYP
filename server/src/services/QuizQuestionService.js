@@ -4,18 +4,21 @@ import sequelize from "../db/db.js";
 
 
 // Controller function to save quiz questions to the database
-export const saveQuizQuestionsToDatabase = async (lessonId, studentId, quizTemplateId, difficultyLevel, quizData) => {
+export const saveQuizQuestionsToDatabase = async (lessonId, studentId, quizTemplateId, quizData) => {
   try {
     // Validate the incoming quiz data
     if (!quizData || !quizData.questions || quizData.questions.length === 0) {
       throw new Error('Invalid quiz data: questions cannot be empty');
     }
 
+    // Fetch difficulty level from user table
+    const difficulty_level_student = await getStudentDifficultyLevel(student_id);
+
     // Structure the quiz data to be saved in the database
     const quizQuestions = {
       student_id: studentId,
       quiz_template_id: quizTemplateId,
-      difficulty_level: difficultyLevel, // Store difficulty level
+      difficulty_level: difficulty_level_student, // Store difficulty level
       questions: quizData.questions, // Store quiz questions in jsonb format
       created_at: new Date(),
       updated_at: new Date(),

@@ -10,25 +10,26 @@ function isValidJSON(str) {
   }
 }
 
-export async function getAssignmentFromGroq(difficulty_level) {
+export async function getAssignmentFromGroq(difficulty_level, title) {
   const prompt = `
-Generate a coding assignment at difficulty level ${difficulty_level} out of 10. The assignment should include the following:
-
-1. Problem statement.
-2. Sample input.
-3. Starter code in any programming language.
-4. Expected output.
-
-Response should be in JSON format as follows:
-
-{
-  "problem": "Problem statement here",
-  "input": "Sample input",
-  "starter_code": "Starter code in any language",
-  "expected_output": "Expected output"
-}
-  Do not include any additional text or explanations, only the JSON formatted response.
-`;
+  Generate a coding assignment titled "${title}" at difficulty level ${difficulty_level} out of 10. The assignment should include:
+  
+  1. A clear and concise problem statement.
+  2. Sample input.
+  3. Starter code in any programming language.
+  4. Expected output.
+  
+  Respond strictly in JSON format as follows:
+  
+  {
+    "problem": "Problem statement here",
+    "input": "Sample input",
+    "starter_code": "Starter code in any language",
+    "expected_output": "Expected output"
+  }
+  
+  Do not include any explanations or extra text — only the JSON object.
+  `;
 
   try {
     // Send request to Groq API

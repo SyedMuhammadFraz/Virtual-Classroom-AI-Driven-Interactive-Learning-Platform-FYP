@@ -6,9 +6,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
 import moment from "moment";
 
-
-
-    const registerUser = asyncHandler(async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
     const { username, fullname,email, password, role,dob,contact } = req.body;
     if (!username || !email || !password || !role || !fullname || !contact || !dob) {
       throw new apiError(404,"All fields are required");

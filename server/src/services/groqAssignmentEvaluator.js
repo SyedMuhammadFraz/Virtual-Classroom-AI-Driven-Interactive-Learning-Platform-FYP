@@ -23,7 +23,7 @@ function parseEvaluationResponse(rawContent) {
  * @param {string} [expectedOutput] - (Optional) Expected output for context.
  * @returns {Object} Evaluation result including success, score, feedback, and raw content.
  */
-async function evaluateAssignmentWithLlama(sourceCode, questionPrompt, expectedOutput = "") {
+async function evaluateAssignmentWithLlama(student_id, assignment_template_id, sourceCode, questionPrompt, expectedOutput = "") {
   const prompt = `
 You are an expert code evaluator.
 
@@ -46,7 +46,6 @@ Please provide:
 4. Whether the code would pass basic test cases (yes/no)
 
 Return ONLY the result in plain text format. Do not include any markdown formatting or extra commentary.
-
 `;
 
   try {
