@@ -25,14 +25,13 @@ export const HandleLogout = async (navigate) => {
 
     // Send the token with the request (In Authorization header)
     const response = await axios.post(
-      console.log(accessToken),
       "http://localhost:5000/api/v1/users/logout",
       {},
-      // {
-      //   headers: {
-      //     Authorization: `Bearer ${accessToken}`, // Send token in Authorization header
-      //   } 
-      // }
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Send token in Authorization header
+        } 
+      }
     );
 
     // Handle successful logout
@@ -65,7 +64,6 @@ else{
   try {
     // Retrieve the token from localStorage
     const accessToken = localStorage.getItem("accessToken");
-    console.log(accessToken)
 
     // Make sure the token exists before proceeding
     if (!accessToken) {

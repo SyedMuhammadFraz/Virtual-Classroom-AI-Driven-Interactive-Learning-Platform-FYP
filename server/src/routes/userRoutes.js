@@ -35,7 +35,7 @@ router.get('/verifyadmin', verifyAdminJWT, (req, res, next) => {
 
 router.route("/register").post(registerUser)
 router.route("/login").post(loginUser)
-router.route("/logout", logout)
+router.route("/logout").post(verifyJWT,logout);
 router.route("/updateprofile").post(verifyJWT,updateUserProfile)
 router.route("/getuserdetails").get(verifyJWT,getUserProfile)
 router.route("/refresh-token").post(refreshAccessToken)
