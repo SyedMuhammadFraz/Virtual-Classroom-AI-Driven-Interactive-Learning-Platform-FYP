@@ -503,6 +503,7 @@ const AdminDashboard = () => {
     fetchAllLessons();
     fetchAllQuizes();
     fetchAllAssignments();
+    loadTestReports();
   }, []);
 
 
@@ -789,11 +790,8 @@ const AdminDashboard = () => {
 // Fetch user profile (student details)
   const fetchUserProfile = async () => {
   try {
-    const response = await axios.get(`http://localhost:5000/api/v1/users/getuserdetails`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,  // Assuming JWT token is stored in localStorage
-      }
-    });
+    const response = await axios.get('http://localhost:5000/api/v1/users/getusers');
+    
     return response.data.data;  // Assuming 'data' contains user details like fullname
   } catch (error) {
     console.error("Error fetching user profile", error);
@@ -802,11 +800,8 @@ const AdminDashboard = () => {
 };
   const fetchQuizData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/users/getquizdata`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,  // Assuming JWT token is stored in localStorage
-        }
-      });
+      const response = await axios.post('http://localhost:5000/api/v1/users/getquizdata');
+       
     return response.data.data;  // Assuming 'data' contains the quiz data array
   } catch (error) {
     console.error("Error fetching quiz data", error);
@@ -815,8 +810,8 @@ const AdminDashboard = () => {
 };
 const fetchQuizName = async (quizTemplateId) => {
   try {
-    const response = await axios.post("http://localhost:5000/api/v1/users/getquiztitle", { quiz_template_id: quizTemplateId });
-    return response.data.quizTitle; // Assuming quizTitle is the key for quiz name
+    const response = await axios.post("http://localhost:5000/api/v1/users/getquiztitle", { id: quizTemplateId });
+    return response.data.data; // Assuming quizTitle is the key for quiz name
   } catch (error) {
     console.error("Error fetching quiz title", error);
     return "Unknown Quiz";
@@ -824,26 +819,33 @@ const fetchQuizName = async (quizTemplateId) => {
 };
 const loadTestReports = async () => {
   try {
-    const quizData = await fetchQuizData();  // Get quiz data (score and template_id)
+    const quizData = await fetchQuizData();
+    const userProfiles = await fetchUserProfile();  // Note: it's an array!
+
     const enrichedTestReports = await Promise.all(
       quizData.map(async (report) => {
-        const userProfile = await fetchUserProfile();  // Get student details
-        const quizName = await fetchQuizName(report.quiz_template_id);  // Get quiz name
-        
+        const quizName = await fetchQuizName(report.quiz_template_id);
+        // Find the correct user based on student_id
+        const user = userProfiles[report.student_id - 1];  // VERY BASIC assumption if IDs are sequential
+        // OR safer way: find by index
+        // const user = userProfiles.find(u => u.id === report.student_id);
+
         return {
-          student: userProfile ? userProfile.fullname : "Unknown Student",
+          student: user ? user.fullname : "Unknown Student",
           quiz: quizName,
-          score: report.score_percentage,
+          score: report.total_score_percentage,
         };
       })
     );
-    setTestReports(enrichedTestReports);  // Set state with full report data
+
+    setTestReports(enrichedTestReports);
   } catch (error) {
     console.error("Error loading test reports", error);
   } finally {
-    setLoading(false);  // Stop loading when done
+    setLoading(false);
   }
 };
+
 
 
   return (
@@ -1034,7 +1036,10 @@ const loadTestReports = async () => {
 
       {/* Test Reports Table */}
       <div className="admin-table">
-        <h2>Test Reports</h2>
+      <h2>Test Reports</h2>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
         <table>
           <thead>
             <tr>
@@ -1044,7 +1049,7 @@ const loadTestReports = async () => {
             </tr>
           </thead>
           <tbody>
-            {filteredTestReports.map((report, index) => (
+            {testReports.map((report, index) => (
               <tr key={index}>
                 <td>{report.student}</td>
                 <td>{report.quiz}</td>
@@ -1053,7 +1058,8 @@ const loadTestReports = async () => {
             ))}
           </tbody>
         </table>
-      </div>
+      )}
+    </div>
       <div className="logout-container">
         <button className="logout-btn" onClick={() => setShowModal(true)}>Log Out</button>
       </div>

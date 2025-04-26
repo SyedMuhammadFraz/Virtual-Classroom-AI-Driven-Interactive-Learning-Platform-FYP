@@ -3,7 +3,7 @@ import { apiError } from "../utils/Apierror.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { ADMIN_EMAIL,ADMIN_PASSWORD } from "../constants.js";
 import {Course,Lesson,Assignment,Quiz} from "../models/adminModel.js"; 
-
+import User from '../models/userModel.js';
 import jwt from "jsonwebtoken";
 
 // admin Credentials
@@ -83,7 +83,17 @@ import jwt from "jsonwebtoken";
     throw new apiError(401,   "Invalid refresh token");
   }
 });
+const getAllUsers = asyncHandler(async (req, res, next) => {
+  try {
+      const users = await User.findAll({
+          attributes: ['fullname', 'email', 'dob', 'contact'] // Only fetch selected fields
+      });
 
+      return res.status(200).json(new apiResponse(200, users, "All users fetched successfully"));
+  } catch (error) {
+      next(error); // Pass errors to the error-handling middleware
+  }
+});
 // CRUD For Courses
   const createCourse = asyncHandler(async (req, res) => {
     const { name, description } = req.body;
@@ -592,5 +602,6 @@ const createQuiz = asyncHandler(async (req, res) => {
    getCourseIdfromLId,
    getCourseName,
    getQuizName,
-   getAssignmenttitle
+   getAssignmenttitle,
+   getAllUsers
   }

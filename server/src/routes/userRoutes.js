@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { loginUser,registerUser,logout,refreshAccessToken,updateUserProfile,forgetPassword, getUserProfile } from "../controllers/userController.js";
 import { verifyJWT,verifyAdminJWT } from "../middlewares/auth.middleware.js";
-import { adminLogin, adminLogout, createAssignment, createCourse, createLesson, createQuiz, deleteAssignment, deleteCourse, deleteLesson, deleteQuiz, getAllAssignments, getAllCourses, getAllLessons, getAllQuizes, getAssignmentId, getAssignmenttitle, getCourseId, getCourseIdfromLId, getCourseName, getLessonId, getQuizId, getQuizName, refreshAdminAccessToken, updateAssignment, updateCourse, updateLesson, updateQuiz } from "../controllers/adminController.js";
+import { adminLogin, adminLogout, createAssignment, createCourse, createLesson, createQuiz, deleteAssignment, deleteCourse, deleteLesson, deleteQuiz, getAllAssignments, getAllCourses, getAllLessons, getAllQuizes, getAllUsers, getAssignmentId, getAssignmenttitle, getCourseId, getCourseIdfromLId, getCourseName, getLessonId, getQuizId, getQuizName, refreshAdminAccessToken, updateAssignment, updateCourse, updateLesson, updateQuiz } from "../controllers/adminController.js";
 import {generateQuizController, getQuizController, getQuizData} from "../controllers/quizController.js";
 import { getquizPercentage, saveStudentQuizResultController, updateDifficultyController, updateStudentCourseResultController } from "../controllers/studentResultController.js";
 import { updateStudentCourseResult } from "../services/updateStudentCourseResultService.js";
@@ -38,6 +38,7 @@ router.route("/login").post(loginUser)
 router.route("/logout").post(verifyJWT,logout)
 router.route("/updateprofile").post(verifyJWT,updateUserProfile)
 router.route("/getuserdetails").get(verifyJWT,getUserProfile)
+router.route("/getusers").get(getAllUsers)
 router.route("/refresh-token").post(refreshAccessToken)
 router.route("/forgetpassword").post(forgetPassword)
 router.route("/adminlogin").post(adminLogin)
