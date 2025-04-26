@@ -82,7 +82,7 @@ export const updateStudentCourseResultController = async (req, res) => {
 };
 
 export const updateDifficultyController = async (req, res) => {
-  const { studentId } = req.body;
+  const  studentId  = req.user.id;
 
   if (!studentId) {
     return res.status(400).json({ error: 'studentId is required in the URL parameters.' });

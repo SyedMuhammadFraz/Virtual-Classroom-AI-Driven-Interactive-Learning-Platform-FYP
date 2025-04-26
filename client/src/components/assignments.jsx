@@ -179,7 +179,6 @@ const AssignmentsQuizzesPage = () => {
                         const response = await axios.post("http://localhost:5000/api/v1/users/generateQuiz", {
                           lessonId: quiz.lesson,
                           lessonName: quiz.title,
-                          difficulty: 5, // Set difficulty level, change as needed
                           course: courseTitle,
                           quizTemplateId: quiz.id
                         }, {

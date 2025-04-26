@@ -38,7 +38,6 @@ const SubmitAssignment = () => {
       );
 
       const evaluationData = evaluationResponse.data;
-      console.log(evaluationData)
       if (!evaluationData.message) {
         toast.error("Evaluation failed. Please try again.");
         return;
@@ -67,7 +66,17 @@ const SubmitAssignment = () => {
         toast.error("Submission failed. Please try again.");
         return;
       }
-
+      const updateDifficultyResponse = await axios.post(
+        "http://localhost:5000/api/v1/users/update-difficulty",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+  
+      console.log('Difficulty updated:', updateDifficultyResponse.data);
       toast.success(`Assignment evaluated and Submitted successfully!. Track your Progress in Progress Report Page.`);
 
       // Navigate back to the dashboard
@@ -81,6 +90,7 @@ const SubmitAssignment = () => {
 
   return (
     <div className="submit-assignment-page">
+      <h1 className="project-name">Virtual Classroom</h1>
       <h2>{title || "Assignment"}</h2>
       
       <div className="assignment-section">

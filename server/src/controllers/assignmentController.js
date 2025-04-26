@@ -108,7 +108,8 @@ export const getAssignmentScore = async (req, res) => {
 
     // Replace this with your actual DB query logic
     const results = await StudentAssignment.findAll({
-      where: { student_id: req.user.id },
+      where: { student_id: req.user.id,
+        submitted: true, },
       attributes: ['assignment_template_id', 'score'],
     });
 

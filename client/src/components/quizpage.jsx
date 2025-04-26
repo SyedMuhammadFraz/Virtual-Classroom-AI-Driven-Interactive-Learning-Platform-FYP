@@ -155,6 +155,18 @@ const Quizpage = () => {
           },
         }
       );
+      const updateDifficultyResponse = await axios.post(
+        "http://localhost:5000/api/v1/users/update-difficulty",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+  
+      console.log('Difficulty updated:', updateDifficultyResponse.data);
+  
       toast.success(response.data.message + " You can track your Result from Progress Page.");
       navigate("/dashboard");
     } catch (error) {

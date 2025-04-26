@@ -14,6 +14,7 @@ const AdminDashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [studentProgress, setStudentProgress] = useState([]);
   const [testReports, setTestReports] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
@@ -785,6 +786,65 @@ const AdminDashboard = () => {
       [name]: value,
     }));
   };
+// Fetch user profile (student details)
+  const fetchUserProfile = async () => {
+  try {
+    const response = await axios.get(`http://localhost:5000/api/v1/users/getuserdetails`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,  // Assuming JWT token is stored in localStorage
+      }
+    });
+    return response.data.data;  // Assuming 'data' contains user details like fullname
+  } catch (error) {
+    console.error("Error fetching user profile", error);
+    return null;
+  }
+};
+  const fetchQuizData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/v1/users/getquizdata`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,  // Assuming JWT token is stored in localStorage
+        }
+      });
+    return response.data.data;  // Assuming 'data' contains the quiz data array
+  } catch (error) {
+    console.error("Error fetching quiz data", error);
+    return [];
+  }
+};
+const fetchQuizName = async (quizTemplateId) => {
+  try {
+    const response = await axios.post("http://localhost:5000/api/v1/users/getquiztitle", { quiz_template_id: quizTemplateId });
+    return response.data.quizTitle; // Assuming quizTitle is the key for quiz name
+  } catch (error) {
+    console.error("Error fetching quiz title", error);
+    return "Unknown Quiz";
+  }
+};
+const loadTestReports = async () => {
+  try {
+    const quizData = await fetchQuizData();  // Get quiz data (score and template_id)
+    const enrichedTestReports = await Promise.all(
+      quizData.map(async (report) => {
+        const userProfile = await fetchUserProfile();  // Get student details
+        const quizName = await fetchQuizName(report.quiz_template_id);  // Get quiz name
+        
+        return {
+          student: userProfile ? userProfile.fullname : "Unknown Student",
+          quiz: quizName,
+          score: report.score_percentage,
+        };
+      })
+    );
+    setTestReports(enrichedTestReports);  // Set state with full report data
+  } catch (error) {
+    console.error("Error loading test reports", error);
+  } finally {
+    setLoading(false);  // Stop loading when done
+  }
+};
+
 
   return (
 
