@@ -22,7 +22,9 @@ const SignUp = () => {
       toast.error("Passwords do not match!");
       return;
     }
+    const loadingToast = toast.loading("Signing Up . Please Be Patient..");
     try {
+     
       // Send registration data to the backend
       const response = await axios.post("http://localhost:5000/api/v1/users/register", {
         username,
@@ -33,6 +35,7 @@ const SignUp = () => {
         dob,
         contact,
       });
+      toast.dismiss(loadingToast);
       // Handle successful registration
         // Display success toast
         toast.success("Registration successful! Redirecting to sign-in...");
@@ -46,6 +49,7 @@ const SignUp = () => {
         // Navigate to sign-in page after 2 seconds
         setTimeout(() => navigate("/signin"), 2000);
     } catch (error) {
+      toast.dismiss(loadingToast);
       console.error("Registration failed:", error);
       // Display error toast
       if (error.response && error.response.data && error.response.data.message) {

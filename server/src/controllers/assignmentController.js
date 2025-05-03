@@ -31,6 +31,42 @@ async function generateAssignmentForStudent(req, res) {
       .json({ error: "An error occurred while generating the assignment" });
   }
 }
+export async function getAssignmentDetails(req, res) {
+  try {
+    const { assignment_template_id } = req.body;
+    const student_id = req.user.id;
+
+    if (!assignment_template_id) {
+      return res.status(400).json({
+        success: false,
+        error: "Assignment Id is required.",
+      });
+    }
+
+    const result = await getAssignmentByTemplateId(student_id, assignment_template_id);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        error: "Assignment not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Assignment Submission Details Fetched",
+      id: result.assignment_template_id,
+      submitted: result.submitted,
+    });
+
+  } catch (error) {
+    console.error("Assignment Fetching failed:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error during assignment fetching.",
+    });
+  }
+}
 
 async function evaluateAssignmentController(req, res) {
   try {

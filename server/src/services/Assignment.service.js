@@ -37,11 +37,14 @@ async function generateAssignmentServiceForStudent(student_id, assignment_templa
 }
 
 async function getAssignmentByTemplateId(student_id, assignment_template_id) {
-  const result = await sequelize.query(
-    `SELECT * FROM assignments WHERE student_id = $1 AND assignment_template_id = $2`,
-    [student_id, assignment_template_id]
+  const [result] = await sequelize.query(
+    `SELECT * FROM student_assignments WHERE student_id = $1 AND assignment_template_id = $2`,
+    {
+      bind: [student_id, assignment_template_id],
+      type: sequelize.QueryTypes.SELECT,
+    }
   );
-  return result.rows[0];
+  return result;
 }
 
 async function saveStudentAssignmentSubmission({

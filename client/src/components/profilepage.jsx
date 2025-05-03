@@ -1,10 +1,9 @@
-// Profile.js
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "./sidebar.jsx";
 import "../styles/profilepage.css";
 import profileImage from "../assets/placeholder.jpg";
-import axios from 'axios';
-import {toast} from 'react-toastify'
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -14,30 +13,29 @@ const Profile = () => {
     dob: "",
     contact: "",
   });
-  
-    // Fetch user data when the component mounts
-    useEffect(() => {
-      const fetchUserProfile = async () => {
-        try {
-          const token = localStorage.getItem("accessToken");
-          const response = await axios.get(
-            "http://localhost:5000/api/v1/users/getuserdetails",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-  
-          if (response.status === 200) {
-            setUser(response.data.data); // API returns { data: { name, email, dob, contact } }
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(
+          "http://localhost:5000/api/v1/users/getuserdetails",
+          {
+            headers: { Authorization: `Bearer ${token}` },
           }
-        } catch (error) {
-          toast.error(error.response?.data?.message || "Failed to fetch user profile.");
-          console.error("Error fetching user profile:", error);
+        );
+
+        if (response.status === 200) {
+          setUser(response.data.data);
         }
-      };
-  
-      fetchUserProfile();
-    }, []);
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Failed to fetch user profile.");
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const handleEditToggle = () => setIsEditing(!isEditing);
 
@@ -47,11 +45,12 @@ const Profile = () => {
   };
 
   const handleSave = async (e) => {
+
+    const loadingToast = toast.loading("Updating your Profile..");
     e.preventDefault();
     setIsEditing(false);
 
     try {
-      // Send the updated user data to the API
       const response = await axios.post(
         "http://localhost:5000/api/v1/users/updateprofile",
         {
@@ -62,27 +61,26 @@ const Profile = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Include the access token if required
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         }
       );
 
-      // Handle successful response
       if (response.status === 200) {
+        toast.dismiss(loadingToast);
         toast.success("Profile updated successfully!");
         console.log("Profile updated:", user);
       }
     } catch (error) {
-      // Handle error
-      if (error.response && error.response.data && error.response.data.message) {
-        toast.error(error.response.data.message); // Show backend error message
+      toast.dismiss(loadingToast);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
       } else {
-        toast.error("Failed to update profile. Please try again."); // Generic error message
+        toast.error("Failed to update profile. Please try again.");
       }
       console.error("Error updating profile:", error);
     }
   };
-
 
   return (
     <div className="profile-page">
@@ -96,6 +94,7 @@ const Profile = () => {
 
         <div className="profile-info">
           <h3>About Me</h3>
+
           {isEditing ? (
             <form className="profile-form" onSubmit={handleSave}>
               <label>
@@ -144,10 +143,7 @@ const Profile = () => {
           ) : (
             <>
               <p>Contact: {user.contact}</p>
-              <button
-                className="profile-edit-button"
-                onClick={handleEditToggle}
-              >
+              <button className="profile-edit-button" onClick={handleEditToggle}>
                 Edit Profile
               </button>
             </>

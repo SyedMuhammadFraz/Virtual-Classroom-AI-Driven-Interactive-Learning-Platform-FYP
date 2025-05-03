@@ -9,24 +9,54 @@ const AssignmentsQuizzesPage = () => {
   const [activeTab, setActiveTab] = useState("assignments");
   const [assignments, setAssignments] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission status
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const fetchAllAssignments = async () => {
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await axios.post("http://localhost:5000/api/v1/users/getassignments");
+
       if (response.status === 200 && response.data?.data) {
-        setAssignments(
-          response.data.data.map((assignment) => ({
-            id: assignment.id,
-            title: assignment.title,
-            description: assignment.description,
-            lesson: assignment.lesson_id,
-            deadline: assignment.due_date
-              ? new Date(assignment.due_date).toISOString().split("T")[0]
-              : "No deadline set",
-          }))
+        const assignmentsWithStatus = await Promise.all(
+          response.data.data.map(async (assignment) => {
+            try {
+              const res = await axios.post(
+                "http://localhost:5000/api/v1/users/getassignmentbyid",
+                { assignment_template_id: assignment.id },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+
+              return {
+                id: assignment.id,
+                title: assignment.title,
+                description: assignment.description,
+                lesson: assignment.lesson_id,
+                deadline: assignment.due_date
+                  ? new Date(assignment.due_date).toISOString().split("T")[0]
+                  : "No deadline set",
+                submitted: res.data.submitted || false,
+              };
+            } catch (err) {
+              return {
+                id: assignment.id,
+                title: assignment.title,
+                description: assignment.description,
+                lesson: assignment.lesson_id,
+                deadline: assignment.due_date
+                  ? new Date(assignment.due_date).toISOString().split("T")[0]
+                  : "No deadline set",
+                submitted: false,
+              };
+            }
+          })
         );
+
+        setAssignments(assignmentsWithStatus);
       } else {
         toast.error("No Assignments found.");
       }
@@ -64,14 +94,13 @@ const AssignmentsQuizzesPage = () => {
   }, []);
 
   const getCourseTitleById = async (lessonId) => {
-    // Add your logic to fetch course title by lessonId
-    return "Course Title"; // Replace with actual API call or logic
+    return "Course Title";
   };
 
   const handleAssignmentSubmit = async (assignment) => {
-    if (isSubmitting) return; // Prevent multiple submissions
+    if (isSubmitting || assignment.submitted) return;
 
-    setIsSubmitting(true); // Set submission in progress
+    setIsSubmitting(true);
     try {
       toast.info("Generating assignment...");
       const token = localStorage.getItem("accessToken");
@@ -98,7 +127,7 @@ const AssignmentsQuizzesPage = () => {
       toast.error("Failed to generate assignment.");
       toast.dismiss();
     } finally {
-      setIsSubmitting(false); // Reset submitting state
+      setIsSubmitting(false);
     }
   };
 
@@ -146,11 +175,13 @@ const AssignmentsQuizzesPage = () => {
                     Deadline: {assignment.deadline}
                   </p>
                   <button
-                    className="assignment-button"
+                    className={`assignment-button ${
+                      assignment.submitted ? "submitted" : ""
+                    }`}
                     onClick={() => handleAssignmentSubmit(assignment)}
-                    disabled={isSubmitting} // Disable button if submission is in progress
+                    disabled={isSubmitting || assignment.submitted}
                   >
-                    Submit
+                    {assignment.submitted ? "Submitted" : "Submit"}
                   </button>
                 </div>
               </div>
@@ -172,24 +203,26 @@ const AssignmentsQuizzesPage = () => {
                     onClick={async () => {
                       try {
                         toast.info("Please wait, starting your quiz...");
-                        // 1. Fetch the course title by lesson ID
                         const courseTitle = await getCourseTitleById(quiz.lesson);
                         const token = localStorage.getItem("accessToken");
-                        // 2. Generate the quiz by making a POST request
-                        const response = await axios.post("http://localhost:5000/api/v1/users/generateQuiz", {
-                          lessonId: quiz.lesson,
-                          lessonName: quiz.title,
-                          course: courseTitle,
-                          quizTemplateId: quiz.id
-                        }, {
-                          headers: {
-                            Authorization: `Bearer ${token}`, // Send token in Authorization header
+
+                        const response = await axios.post(
+                          "http://localhost:5000/api/v1/users/generateQuiz",
+                          {
+                            lessonId: quiz.lesson,
+                            lessonName: quiz.title,
+                            course: courseTitle,
+                            quizTemplateId: quiz.id,
+                          },
+                          {
+                            headers: {
+                              Authorization: `Bearer ${token}`,
+                            },
                           }
-                        });
+                        );
 
                         const data = response.data;
 
-                        // 3. Navigate to the quiz page with the generated quiz
                         navigate("/quiz", {
                           state: {
                             title: quiz.title,

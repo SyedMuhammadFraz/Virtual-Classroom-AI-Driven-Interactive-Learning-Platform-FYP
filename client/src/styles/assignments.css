@@ -113,3 +113,8 @@
 .assignment-button:hover {
   background-color: #b31348;
 }
+.assignment-button.submitted {
+  background-color: #4caf50; /* Green */
+  color: white;
+  cursor: not-allowed;
+}

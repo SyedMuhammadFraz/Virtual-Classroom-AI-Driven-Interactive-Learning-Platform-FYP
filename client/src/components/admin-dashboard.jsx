@@ -376,14 +376,14 @@ const AdminDashboard = () => {
     setStudentProgress(data);
   };
 
-  const fetchTestReports = async () => {
-    const reports = [
-      { student: "John Doe", quiz: "Quiz 1", score: "85%" },
-      { student: "Jane Smith", quiz: "Quiz 1", score: "90%" },
-      { student: "Mike Johnson", quiz: "Quiz 2", score: "75%" },
-    ];
-    setTestReports(reports);
-  };
+  // const fetchTestReports = async () => {
+  //   const reports = [
+  //     { student: "John Doe", quiz: "Quiz 1", score: "85%" },
+  //     { student: "Jane Smith", quiz: "Quiz 1", score: "90%" },
+  //     { student: "Mike Johnson", quiz: "Quiz 2", score: "75%" },
+  //   ];
+  //   setTestReports(reports);
+  // };
 
   const fetchAllCourses = async () => {
     try {
@@ -498,7 +498,6 @@ const AdminDashboard = () => {
   // Fetch data when the component mounts
   useEffect(() => {
     fetchStudentProgress();
-    fetchTestReports();
     fetchAllCourses();
     fetchAllLessons();
     fetchAllQuizes();
@@ -523,16 +522,7 @@ const AdminDashboard = () => {
     );
   });
 
-  const filteredTestReports = testReports.filter((report) => {
-    return (
-      (filters.studentName === "" ||
-        report.student
-          .toLowerCase()
-          .includes(filters.studentName.toLowerCase())) &&
-      (filters.quiz === "" ||
-        report.quiz.toLowerCase().includes(filters.quiz.toLowerCase()))
-    );
-  });
+
   const addCourse = async () => {
 
     if (courseName.trim() && courseDescription.trim()) {
@@ -716,10 +706,11 @@ const AdminDashboard = () => {
   };
 
   const addQuiz = async () => {
+
     if (quizTitle.trim() && quizLesson) {
-
+     
       let lId = "";
-
+      const loadingToast = toast.loading("Adding Quiz Credentials..");
       try {
 
         const response = await axios.post(
@@ -736,14 +727,14 @@ const AdminDashboard = () => {
         lId = response.data.data;
 
       } catch (error) {
-
+        toast.dismiss(loadingToast)
         console.error("Error in fetching the id", error.message)
 
 
       }
       try {
 
-
+        
         const response = await axios.post(
           "http://localhost:5000/api/v1/users/addquiz",
           {
@@ -766,6 +757,7 @@ const AdminDashboard = () => {
         setQuizTitle("");
         setQuizLesson("");
         console.log("Quiz added successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Quiz Added Successfully!");
 
       } catch (error) {
