@@ -86,7 +86,7 @@ import jwt from "jsonwebtoken";
 const getAllUsers = asyncHandler(async (req, res, next) => {
   try {
       const users = await User.findAll({
-          attributes: ['fullname', 'email', 'dob', 'contact'] // Only fetch selected fields
+          attributes: ['id','fullname', 'email', 'dob', 'contact'] // Only fetch selected fields
       });
 
       return res.status(200).json(new apiResponse(200, users, "All users fetched successfully"));
@@ -294,6 +294,23 @@ const getAllUsers = asyncHandler(async (req, res, next) => {
     return res
       .status(200)
       .json(new apiResponse(200, lessons, "Lessons fetched successfully"));
+  });
+  const getAllLessonsfromcid = asyncHandler(async (req, res) => {
+    const { course_ids } = req.body; // Expecting array: [2, 3, 4]
+  
+    if (!Array.isArray(course_ids)) {
+      return res.status(400).json(new apiResponse(400, null, "course_ids must be an array"));
+    }
+  
+    const existingLessons = await Lesson.findAll({
+      where: {
+        course_id: course_ids
+      }
+    });
+  
+    return res.status(200).json(
+      new apiResponse(200, existingLessons, "Lessons fetched successfully")
+    );
   });
   const getLessonId = asyncHandler(async (req, res) => {
 
@@ -603,5 +620,6 @@ const createQuiz = asyncHandler(async (req, res) => {
    getCourseName,
    getQuizName,
    getAssignmenttitle,
-   getAllUsers
+   getAllUsers,
+   getAllLessonsfromcid
   }

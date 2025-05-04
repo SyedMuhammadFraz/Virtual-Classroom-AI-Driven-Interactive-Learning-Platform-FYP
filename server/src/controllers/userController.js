@@ -305,6 +305,31 @@ const registerUser = asyncHandler(async (req, res) => {
       next(error);
     }
   });
+  const getEnrollmentData = asyncHandler(async (req, res, next) => {
+    try {
+      const student_id = req.user.id; // assuming auth middleware adds req.user
+     
+  
+      const enrollments = await Enrollment.findAll({
+        where: {
+          student_id,
+        },
+      });
+  
+      if (!enrollments || enrollments.length === 0) {
+        return res.status(200).json(
+          new apiResponse(200,  "Record Not Found")
+        );
+      }
+  
+      return res.status(200).json(
+        new apiResponse(200, enrollments, "All the data of the student enrollment fetched successfully.")
+      );
+  
+    } catch (error) {
+      next(error);
+    }
+  });
   
   
   
@@ -318,7 +343,8 @@ const registerUser = asyncHandler(async (req, res) => {
         forgetPassword,
         getUserProfile,
         enroll_course,
-        getEnrollmentDetails
+        getEnrollmentDetails,
+        getEnrollmentData
       
     }
 

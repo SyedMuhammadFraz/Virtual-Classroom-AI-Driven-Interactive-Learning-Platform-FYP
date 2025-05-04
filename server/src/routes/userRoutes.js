@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { loginUser,registerUser,logout,refreshAccessToken,updateUserProfile,forgetPassword, getUserProfile, enroll_course, getEnrollmentDetails } from "../controllers/userController.js";
+import { loginUser,registerUser,logout,refreshAccessToken,updateUserProfile,forgetPassword, getUserProfile, enroll_course, getEnrollmentDetails, getEnrollmentData } from "../controllers/userController.js";
 import { verifyJWT,verifyAdminJWT } from "../middlewares/auth.middleware.js";
-import { adminLogin, adminLogout, createAssignment, createCourse, createLesson, createQuiz, deleteAssignment, deleteCourse, deleteLesson, deleteQuiz, getAllAssignments, getAllCourses, getAllLessons, getAllQuizes, getAllUsers, getAssignmentId, getAssignmenttitle, getCourseId, getCourseIdfromLId, getCourseName, getLessonId, getQuizId, getQuizName, refreshAdminAccessToken, updateAssignment, updateCourse, updateLesson, updateQuiz } from "../controllers/adminController.js";
+import { adminLogin, adminLogout, createAssignment, createCourse, createLesson, createQuiz, deleteAssignment, deleteCourse, deleteLesson, deleteQuiz, getAllAssignments, getAllCourses, getAllLessons, getAllLessonsfromcid, getAllQuizes, getAllUsers, getAssignmentId, getAssignmenttitle, getCourseId, getCourseIdfromLId, getCourseName, getLessonId, getQuizId, getQuizName, refreshAdminAccessToken, updateAssignment, updateCourse, updateLesson, updateQuiz } from "../controllers/adminController.js";
 import {generateQuizController, getQuizController, getQuizData} from "../controllers/quizController.js";
 import { getquizPercentage, saveStudentQuizResultController, updateDifficultyController, updateStudentCourseResultController } from "../controllers/studentResultController.js";
 import { updateStudentCourseResult } from "../services/updateStudentCourseResultService.js";
@@ -54,6 +54,7 @@ router.route("/updatecourse").post(verifyAdminJWT,updateCourse)
 router.route("/deletecourse").post(verifyAdminJWT,deleteCourse)
 router.route("/addlesson").post(verifyAdminJWT,createLesson)
 router.route("/getlessons").post(getAllLessons)
+router.route("/getlessonfromcid").post(getAllLessonsfromcid)
 router.route("/getlessonid").post(verifyAdminJWT,getLessonId)
 router.route("/updatelesson").post(verifyAdminJWT,updateLesson)
 router.route("/deletelesson").post(verifyAdminJWT,deleteLesson)
@@ -86,4 +87,5 @@ router.post("/get-assignment", getAssignmentController); // Route to get assignm
 router.post("/submit-assignment-result", verifyJWT,submitAssignmentController);
 router.post("/enrollcourse", verifyJWT,enroll_course); 
 router.post("/getenrolldetails", verifyJWT,getEnrollmentDetails);   
+router.post("/getenrolldata", verifyJWT,getEnrollmentData);   
 export default router;

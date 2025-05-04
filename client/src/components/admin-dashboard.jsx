@@ -43,7 +43,7 @@ const AdminDashboard = () => {
   const deleteItem = async (list, setList, id, title) => {
 
     if (title == "Courses") {
-
+      const loadingToast = toast.loading("Deleting Quiz...");
       const itemToDelete = list.find((item) => item.id === id);
       const name = itemToDelete.name;
       try {
@@ -60,9 +60,10 @@ const AdminDashboard = () => {
         console.log(response);
         setList(list.filter((item) => item.id !== id));
         console.log("Course Deleted successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Course Deleted Successfully!");
       } catch (error) {
-
+         toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -72,7 +73,7 @@ const AdminDashboard = () => {
       }
     }
     if (title == "Lessons") {
-
+      const loadingToast = toast.loading("Deleting Lesson ...");
       const itemToDelete = list.find((item) => item.id === id);
       const title = itemToDelete.name;
       try {
@@ -89,9 +90,10 @@ const AdminDashboard = () => {
         console.log(response);
         setList(list.filter((item) => item.id !== id));
         console.log("Lesson Deleted successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Lesson Deleted Successfully!");
       } catch (error) {
-
+        toast.success("Lesson Deleted Successfully!");
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -101,7 +103,8 @@ const AdminDashboard = () => {
       }
     }
     if (title == "Quizzes") {
-
+      
+      const loadingToast = toast.loading("Deleting Quiz ...");
       const itemToDelete = list.find((item) => item.id === id);
       const title = itemToDelete.title;
       try {
@@ -118,9 +121,10 @@ const AdminDashboard = () => {
         console.log(response);
         setList(list.filter((item) => item.id !== id));
         console.log("Quiz Deleted successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Quiz Deleted Successfully!");
       } catch (error) {
-
+        toast.dismiss(loadingToast) 
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -130,7 +134,8 @@ const AdminDashboard = () => {
       }
     }
     if (title == "Assignments") {
-
+       
+      const loadingToast = toast.loading("Deleting Assignment ...");
       const itemToDelete = list.find((item) => item.id === id);
       const title = itemToDelete.title;
       try {
@@ -147,9 +152,10 @@ const AdminDashboard = () => {
         console.log(response);
         setList(list.filter((item) => item.id !== id));
         console.log("Assignment Deleted successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Assignment Deleted Successfully!");
       } catch (error) {
-
+        toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -176,7 +182,7 @@ const AdminDashboard = () => {
 
         if (name) {
           // Create a copy of the courses array and update the course name
-
+          const loadingToast = toast.loading("Updating Course ...");
           try {
 
             const response = await axios.post(
@@ -196,11 +202,12 @@ const AdminDashboard = () => {
             setCourses(updatedCourses);
             console.log(updatedCourses);
             console.log("Course Updated successfully:", response.data);
+            toast.dismiss(loadingToast)
             toast.success("Course Name Updated Successfully!");
           }
 
           catch (error) {
-
+            toast.dismiss(loadingToast)
             if (error.response && error.response.data && error.response.data.message) {
               toast.error(error.response.data.message); // Show backend error message
             } else {
@@ -221,7 +228,7 @@ const AdminDashboard = () => {
 
         const title = window.prompt(`Enter the new Lesson name for ${lessonToEdit.name}:`);
         if (title) {
-
+          const loadingToast = toast.loading("Updating Lesson Name ...");
           try {
 
             const response = await axios.post(
@@ -241,11 +248,12 @@ const AdminDashboard = () => {
             setLessons(updatedLessons);
             console.log(updatedLessons);
             console.log("Lesson Updated successfully:", response.data);
+            toast.dismiss(loadingToast)
             toast.success("Lesson Name Updated Successfully!");
           }
 
           catch (error) {
-
+            toast.dismiss(loadingToast)
             if (error.response && error.response.data && error.response.data.message) {
               toast.error(error.response.data.message); // Show backend error message
             } else {
@@ -265,7 +273,7 @@ const AdminDashboard = () => {
 
         const title = window.prompt(`Enter the new Quiz name for ${quizToEdit.title}:`);
         if (title) {
-
+          const loadingToast = toast.loading("Updating Quiz Name...");
           try {
 
             const response = await axios.post(
@@ -285,11 +293,12 @@ const AdminDashboard = () => {
             setQuizzes(updatedquizes);
             console.log(updatedquizes);
             console.log("Quiz Updated successfully:", response.data);
+            toast.dismiss(loadingToast)
             toast.success("Quiz Name Updated Successfully!");
           }
 
           catch (error) {
-
+            toast.dismiss(loadingToast)
             if (error.response && error.response.data && error.response.data.message) {
               toast.error(error.response.data.message); // Show backend error message
             } else {
@@ -310,7 +319,7 @@ const AdminDashboard = () => {
 
         const title = window.prompt(`Enter the new Assignment name for ${assignmentToEdit.title}:`);
         if (title) {
-
+          const loadingToast = toast.loading("Updating Assignment Name...");
           try {
 
             const response = await axios.post(
@@ -330,11 +339,12 @@ const AdminDashboard = () => {
             setAssignments(updatedassignments);
             console.log(updatedassignments);
             console.log("Assignment Updated successfully:", response.data);
+            toast.dismiss(loadingToast)
             toast.success("Assignment Name Updated Successfully!");
           }
 
           catch (error) {
-
+            toast.dismiss(loadingToast)
             if (error.response && error.response.data && error.response.data.message) {
               toast.error(error.response.data.message); // Show backend error message
             } else {
@@ -529,6 +539,7 @@ const AdminDashboard = () => {
 
       const newCourses = [...courses, { id: courseId, name: courseName, description: courseDescription }];
       setCourses(newCourses);
+      const loadingToast = toast.loading("Adding Course...");
       try {
         // Send the courseName and courseDescription to the API
         const response = await axios.post(
@@ -550,11 +561,13 @@ const AdminDashboard = () => {
         setCourseDescription("");
         setCourseID("")
         console.log("Course added successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Course Added Successfully!");
       }
 
       // Handle the response if needed
       catch (error) {
+        toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -570,7 +583,7 @@ const AdminDashboard = () => {
 
     let cId = "";
     if (lessonName.trim() && lessonCourse) {
-
+      const loadingToast = toast.loading("Adding Lesson...");
       try {
 
         const response = await axios.post(
@@ -614,9 +627,10 @@ const AdminDashboard = () => {
         setLessonName("");
         setLessonCourse("");
         console.log("Lesson added successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Lesson Added Successfully!");
       } catch (error) {
-
+        toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -632,8 +646,7 @@ const AdminDashboard = () => {
     if (assignmentTitle.trim() && assignmentDescription.trim() && assignmentLesson) {
 
       let lId = "";
-      let cId = "";
-
+      const loadingToast = toast.loading("Adding Assignment...");
       try {
 
         const response = await axios.post(
@@ -691,9 +704,10 @@ const AdminDashboard = () => {
         setAssignmentLesson("");
         setAssignmentDescription("")
         console.log("Assignment added successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Assignment Added Successfully!");
       } catch (error) {
-
+        toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -818,9 +832,9 @@ const loadTestReports = async () => {
       quizData.map(async (report) => {
         const quizName = await fetchQuizName(report.quiz_template_id);
         // Find the correct user based on student_id
-        const user = userProfiles[report.student_id - 1];  // VERY BASIC assumption if IDs are sequential
+        // const user = userProfiles[report.student_id-1];  // VERY BASIC assumption if IDs are sequential
         // OR safer way: find by index
-        // const user = userProfiles.find(u => u.id === report.student_id);
+        const user = userProfiles.find(u => u.id === report.student_id);
 
         return {
           student: user ? user.fullname : "Unknown Student",
