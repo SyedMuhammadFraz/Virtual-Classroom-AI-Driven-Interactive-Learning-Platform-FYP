@@ -1,0 +1,141 @@
+.analytics {
+    height: auto;
+    margin: auto;
+    margin-left: 200px;
+    margin-right: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+  }
+  
+  .analytics-content {
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+  
+  .analytics-head {
+    font-family: 'Borlaw', sans-serif;
+    font-weight: 500;
+    font-size: 50px;
+    color: #333;
+    margin-bottom: 40px;
+    text-align: left;
+    line-height: 1.3;
+  }
+  
+  .analytics-text {
+    text-align: center;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    font-size: 50px;
+    color: #333;
+  }
+  
+  .analytics-circle {
+    cursor: pointer;
+    margin: 100px;
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    transition: all 0.5s ease-in-out;
+  }
+  
+  .current-circle {
+    padding: 20px;
+    border-radius: 50%;
+    height: 250px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+    transition: transform 1s ease;
+  }
+  
+  /* Default circle background and border */
+  .current-circle-1,
+  .current-circle-3 {
+    border: 3px solid #E3B723;
+    margin-left: -20px;
+    margin-top: 25px;
+    background-color: transparent;
+    color: black;
+  }
+  
+  .current-circle-2,
+  .current-circle-4 {
+    background-color: #e67e22;
+    color: white;
+    margin-top: -25px;
+    margin-left: -20px;
+    border: none;
+  }
+  
+  /* Paragraph styles */
+  .analytics-para-1 {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #333;
+    margin-top: -20px;
+  }
+  
+  .analytics-para {
+    margin-top: -20px;
+    font-family: 'Barlow', sans-serif;
+  }
+  
+  /* Analytics number font style (color handled below) */
+  .analytics-number {
+    margin-top: 0px;
+    font-family: "Cabin", sans-serif;
+    font-size: 50px;
+  }
+  
+  /* Default number color */
+  .current-circle-1 .analytics-number,
+  .current-circle-3 .analytics-number {
+    color: black;
+  }
+  
+  .current-circle-2 .analytics-number,
+  .current-circle-4 .analytics-number {
+    color: white;
+  }
+  
+  /* Hover effects for transform and color change */
+  .analytics-circle:hover .current-circle-1,
+  .analytics-circle:hover .current-circle-3 {
+    transform: translateY(-50px);
+    background-color: #e67e22;
+    color: white;
+    border: none;
+  }
+  
+  .analytics-circle:hover .current-circle-2,
+  .analytics-circle:hover .current-circle-4 {
+    transform: translateY(50px);
+    background-color: transparent;
+    color: black;
+    border: 3px solid #E3B723;
+  }
+  
+  /* Hover number color flips */
+  .analytics-circle:hover .current-circle-1 .analytics-number,
+  .analytics-circle:hover .current-circle-3 .analytics-number {
+    color: white;
+  }
+  
+  .analytics-circle:hover .current-circle-2 .analytics-number,
+  .analytics-circle:hover .current-circle-4 .analytics-number {
+    color: black;
+  }
+  
+  @media (max-width: 520px) {
+    .analytics {
+      display: none;
+    }
+  }
+  

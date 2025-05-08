@@ -1,7 +1,23 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+
+// Public Pages
+import LandingPage from './pages/LandingPage';
+
+// Shared Landing Components (only for public pages)
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Rectangles from './components/Rectangles';
+import Whatsapp from './components/Whatsapp';
+import ScrollToTop from './components/ScrollToTop';
+import ScrollToTopButton from './components/ScrollToTopButton';
+
+// Auth & App Pages
 import SignIn from "./components/signin";
+import Sidebar from "./components/sidebar";
 import SignUp from "./components/signup";
+import ForgotPassword from "./components/ForgotPassword";
 import Dashboard from "./components/dashboard";
 import Profile from "./components/profilepage";
 import CoursesPage from "./components/courses";
@@ -9,21 +25,38 @@ import AssignmentsQuizzesPage from "./components/assignments";
 import ProgressReportPage from "./components/progressreport";
 import LecturesPage from "./components/lecture";
 import AdminDashboard from "./components/admin-dashboard";
-import PrivateRoute from "./utils/PrivateRoute"; // Import PrivateRoute
-import ForgotPassword from "./components/ForgotPassword";
-import { ToastContainer } from "react-toastify";
-import Sidebar from "./components/sidebar";
-import PublicRoute from "./utils/PublicRoutes";
-import Quizpage from "./components/quizpage"; // Import the Quizpage component
+import Quizpage from "./components/quizpage";
 import SubmitAssignment from "./components/SubmitAssignment";
 
-const App = () => {
+// Route Guards
+import PrivateRoute from "./utils/PrivateRoute";
+import PublicRoute from "./utils/PublicRoutes";
+
+// App Wrapper to access location
+function AppWrapper() {
+  const location = useLocation();
+
+  // Define public marketing pages where you want the landing UI
+  const isLandingPage = location.pathname === "/";
+
   return (
-    <Router>
+    <>
       <ToastContainer />
+
+      {isLandingPage && (
+        <>
+          <Navbar />
+          <Whatsapp />
+          <ScrollToTop />
+          <ScrollToTopButton />
+        </>
+      )}
+
       <Routes>
+        {/* Landing Routes */}
+        <Route path="/" element={<LandingPage />} />
+
         {/* Public Routes */}
-        <Route path="/" element={<PublicRoute element={<SignIn />} />} />
         <Route path="/signin" element={<PublicRoute element={<SignIn />} />} />
         <Route path="/signup" element={<PublicRoute element={<SignUp />} />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -33,13 +66,8 @@ const App = () => {
           path="/dashboard"
           element={
             <PrivateRoute
-              element={
-                <>
-                  <Sidebar />
-                  <Dashboard />
-                </>
-              }
               requiredRole="student"
+              element={<><Sidebar /><Dashboard /></>}
             />
           }
         />
@@ -47,12 +75,8 @@ const App = () => {
           path="/lectures/:courseId"
           element={
             <PrivateRoute
-              element={
-                <>
-                  <LecturesPage />
-                </>
-              }
               requiredRole="student"
+              element={<LecturesPage />}
             />
           }
         />
@@ -60,13 +84,8 @@ const App = () => {
           path="/profile"
           element={
             <PrivateRoute
-              element={
-                <>
-                  <Sidebar />
-                  <Profile />
-                </>
-              }
               requiredRole="student"
+              element={<><Sidebar /><Profile /></>}
             />
           }
         />
@@ -74,13 +93,8 @@ const App = () => {
           path="/lecture"
           element={
             <PrivateRoute
-              element={
-                <>
-                  <Sidebar />
-                  <CoursesPage />
-                </>
-              }
               requiredRole="student"
+              element={<><Sidebar /><CoursesPage /></>}
             />
           }
         />
@@ -88,13 +102,8 @@ const App = () => {
           path="/assignment"
           element={
             <PrivateRoute
-              element={
-                <>
-                  <Sidebar />
-                  <AssignmentsQuizzesPage />
-                </>
-              }
               requiredRole="student"
+              element={<><Sidebar /><AssignmentsQuizzesPage /></>}
             />
           }
         />
@@ -102,57 +111,59 @@ const App = () => {
           path="/progress-report"
           element={
             <PrivateRoute
-              element={
-                <>
-                  <Sidebar />
-                  <ProgressReportPage />
-                </>
-              }
               requiredRole="student"
+              element={<><Sidebar /><ProgressReportPage /></>}
             />
           }
         />
-
-        {/* Quiz Route */}
         <Route
           path="/quiz"
           element={
             <PrivateRoute
-              element={
-                <>
-                  
-                  <Quizpage />
-                </>
-              }
               requiredRole="student"
+              element={<Quizpage />}
             />
           }
         />
         <Route
-  path="/submit-assignment"
-  element={
-    <PrivateRoute
-      element={
-        <>
-         
-          <SubmitAssignment />
-        </>
-      }
-      requiredRole="student"
-    />
-  }
-/>
+          path="/submit-assignment"
+          element={
+            <PrivateRoute
+              requiredRole="student"
+              element={<SubmitAssignment />}
+            />
+          }
+        />
 
-        {/* Admin Routes */}
+        {/* Admin Route */}
         <Route
           path="/admin"
           element={
-            <PrivateRoute element={<AdminDashboard />} requiredRole="admin" />
+            <PrivateRoute
+              requiredRole="admin"
+              element={<AdminDashboard />}
+            />
           }
         />
       </Routes>
+
+      {isLandingPage && (
+        <>
+          <Rectangles />
+          <Footer />
+        </>
+      )}
+    </>
+  );
+}
+
+// Wrap with Router once only
+function App() {
+  return (
+    <Router>
+      <AppWrapper />
     </Router>
   );
-};
+}
 
 export default App;

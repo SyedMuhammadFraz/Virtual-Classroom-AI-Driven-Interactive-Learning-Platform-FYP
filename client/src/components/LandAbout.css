@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap');
+
+.land-about {
+    display: grid;
+    grid-template-columns: 0.9fr 1fr;
+    gap: 30px;
+    margin-top: 100px;
+    padding-bottom: 70px;
+    margin-right: 30px;
+    margin-left: 20px;
+}
+
+.right-column h2 {
+    font-family: 'Borlaw', sans-serif;
+    font-weight: 500;
+    font-size: 50px;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: left;
+    line-height: 1.3;
+}
+.land-im{
+    opacity: 0;
+    margin-top: 85px;
+    height: 400px;
+    border-radius: 10px;
+    object-fit: contain;
+    transition: 0.25s ease;
+}
+
+.bold-text {
+    font-weight: 600;
+    font-family: 'Cabin';
+}
+
+.right-column {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-column p {
+    margin-top: 10px;
+    opacity: 1;
+    font-size: 18px;
+    color: #1a1a1a;
+    line-height: 1.5;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    transition: 0.5s ease;
+}
+
+.professional-btn {
+    display: flex;
+    border: 1px solid #333;
+    border-radius: 5px;
+    gap: 10px;
+    background-color: white;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    padding: 12px 18px;
+    font-family: 'Poppins', sans-serif;
+    width: 25%;
+    cursor: pointer;
+    margin-top: 30px;
+    font-weight: 400;
+    opacity: 0;
+    transition: 0.5s ease;
+}
+.professional-btn:hover .forward-icon{
+    transform: translateX(15px);
+}
+.professional-btn:hover{
+    background-color: #e67e22;
+    color: white;
+    border: none;
+}
+
+
+.highlight-text {
+    position: relative;
+    display: inline-block;
+    font-weight: 700;
+    font-family: 'Borlaw', sans-serif;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #e67e22; 
+}
+
+
+.land-about.InView .highlight-text::before {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .land-about {
+        grid-template-columns: 1fr;
+        text-align: center;
+        margin: 20px;
+    }
+    .land-im{
+        height: 220px;
+        object-fit: contain;
+    }
+    .right-column{
+        margin-top: -30px;
+    }
+
+    .left-column h2 {
+        font-size: 35px;
+        text-align: left;
+    }
+
+    .underline {
+        margin: 0 auto;
+    }
+
+    .right-column p {
+        text-align: left;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+
+    .professional-btn {
+        width: 50%;
+        height: 50px;
+    }
+}

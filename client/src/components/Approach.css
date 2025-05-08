@@ -1,0 +1,173 @@
+.approach {
+    height: auto;
+    margin: 40px;
+    margin-top: 150px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 70px;
+}
+.approach-im {
+    height: 420px;
+    object-fit: cover;
+    border-radius: 40px;
+    cursor: pointer;
+}
+
+.approach-para {
+    text-align: left;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.approach-btn-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.approach-btn {
+    margin-top: 0px;
+    padding: 12px 30px;
+    border: 1px solid #333;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: black;
+    background: transparent;
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+    z-index: 1;
+    transition: 0.5s ease;
+}
+
+.approach-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+}
+
+.approach-im-1 {
+    margin-top: 10px;
+    height: 180px;  /* Increased height */
+    max-width: 100%;
+    margin-left: 0;
+    border-radius: 20px;
+    object-fit: contain;
+    cursor: pointer;
+}
+.approach-text {
+    text-align: left;
+}
+
+.approach-head {
+    margin-top: -10px;
+    text-align: left;
+    font-family: 'Borlaw', sans-serif;
+    font-weight: 500;
+    font-size: 48px;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: left;
+    line-height: 1.2;
+}
+.chat-im{
+    height: 270px;
+    margin-left: -80px;
+    margin-top: -50px;
+    display: block;
+}
+.approach-bottom-next{
+    position: relative;
+    display: inline-block;
+}
+.chat-text {
+    position: absolute;
+    top: 42%; /* Adjust positioning */
+    left: 30%;
+    transform: translate(-50%, -50%);
+    color: rgb(0, 0, 0); /* Adjust text color */
+    font-size: 18px;
+    border-radius: 5px;
+    text-align: left;
+    line-height: 1.2;
+    font-family: 'Borlaw', sans-serif;
+    font-weight: 100;
+}
+/* For large screens (desktops and laptops) */
+@media (max-width: 1200px) {
+    .approach {
+        gap: 50px;
+    }
+    .approach-im {
+        height: 450px;
+    }
+}
+
+/* For tablets and small laptops */
+@media (max-width: 992px) {
+    .approach {
+        grid-template-columns: 1fr; /* Single column layout */
+        gap: 40px;
+    }
+    .approach-im {
+        height: 400px;
+    }
+ 
+    .approach-im-1,
+    .chat-im {
+        margin-left: 0;
+        height: 200px;
+    }
+    .chat-text {
+        font-size: 16px;
+        left: 50%;
+    }
+}
+
+/* For mobile devices */
+@media (max-width: 768px) {
+    .approach {
+        margin: 20px;
+        margin-top: 100px;
+        gap: 30px;
+    }
+    .approach-im {
+        height: 300px;
+        border-radius: 20px;
+    }
+    .approach-head {
+        font-size: 36px;
+    }
+    .approach-im-1,
+    .chat-im {
+        height: 180px;
+        margin-left: 0;
+    }
+    .chat-text {
+        font-size: 14px;
+        top: 30%;
+    }
+}
+
+/* For extra small devices (mobile screens under 480px) */
+@media (max-width: 480px) {
+    .approach {
+        margin: 15px;
+        margin-top: 80px;
+    }
+    .approach-im {
+        height: 250px;
+    }
+    .approach-btn {
+        padding: 10px 25px;
+        font-size: 0.8rem;
+    }
+    .approach-head {
+        font-size: 28px;
+    }
+    .chat-text {
+        font-size: 12px;
+        top: 25%;
+    }
+}
