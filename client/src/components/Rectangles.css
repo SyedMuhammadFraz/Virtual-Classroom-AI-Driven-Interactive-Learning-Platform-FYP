@@ -1,0 +1,29 @@
+.rect {
+    width: 0;
+    height: 75px;
+    border-radius: 0px;
+    background-color: #D91656;
+    transition: width 0.75s ease, transform 0.75s ease; /* Animate both width & position */
+    transform: translateX(100%); /* Start off-screen to the right */
+}
+
+.rect-12 {
+    width: 0;
+    height: 75px;
+    background-color: #e67e22;
+    transition: width 0.75s ease;
+}
+
+.rect-left {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+}
+
+.rect-next {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+}
+
+.rect-next .rect {
+    margin-left: auto;
+}

@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+.footer {
+  margin: 50px;
+  margin-top: 100px;
+  background: #ffffff;
+  color: #000;
+  padding: 40px 20px;
+  opacity: 0;
+  transition: 0.75s ease;
+}
+
+.icon-1 {
+  height: 80px;
+  object-fit: contain;
+  margin-left: -30px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.footer-column {
+  width: 19%;
+  font-family: 'Poppins', sans-serif;
+  text-align: left;
+  font-size: 15px;
+  padding: 10px;
+}
+
+.footer-column h3 {
+  margin-bottom: 15px;
+  font-family: 'Poppins', sans-serif;
+  text-align: left;
+  color: #494949;
+  font-size: 16px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  font-family: "Cabin", sans-serif;
+  font-size: 15px;
+}
+
+.footer-column ul li {
+  margin-bottom: 10px;
+}
+.links-column{
+  margin-left: 20px;
+}
+
+.footer-column ul li a {
+  text-decoration: none;
+  color: #333;
+  transition: 0.3s;
+}
+
+.footer-column ul li a:hover {
+  color: #176032;
+}
+
+.social-icons {
+  margin-top: 10px;
+}
+
+.social-icons svg {
+  font-size: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.social-icons svg:hover {
+  color: #176032;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  margin-top: 40px;
+  font-size: 14px;
+}
+.footer-head{
+  margin-top: 50px;
+}
+.footer-para{
+  margin-top: -10px;
+}
+
+/* Tablet View Adjustments */
+@media screen and (max-width: 1024px) {
+  .footer-column {
+    width: 48%; /* Adjust to fit two columns */
+    margin-bottom: 20px;
+  }
+
+  .footer-bottom {
+    font-size: 16px;
+  }
+
+  .social-icons svg {
+    font-size: 18px; /* Adjust size of social icons */
+  }
+}
+.social-icons-1 {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icons-1 svg {
+  cursor: pointer;
+  margin-top: 20px;
+  width: 22px;
+  height: 22px;
+  padding: 8px;
+  background-color: #222;
+  color: white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.social-icons-1 svg:hover {
+  background-color: #176032;
+  color: #E3B723;
+  animation: dance 0.5s ease-in-out infinite;
+}
+
+/* Dancing effect */
+@keyframes dance {
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-5px) rotate(5deg); }
+  50% { transform: translateY(0) rotate(-5deg); }
+  75% { transform: translateY(-3px) rotate(3deg); }
+  100% { transform: translateY(0); }
+}
+
+
+/* Mobile View Adjustments */
+@media screen and (max-width: 768px) {
+  .footer{
+    margin: 20px;
+  }
+  .footer-column {
+    width: 100%; /* Stack footer columns on top of each other */
+    margin-bottom: 20px;
+    font-size: 15px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .icon-1 {
+    height: 60px;
+  }
+
+  .social-icons svg {
+    font-size: 16px; /* Further reduce icon size */
+    margin-right: 5px;
+  }
+
+  .footer-bottom {
+    font-size: 14px;
+    padding-top: 10px;
+  }
+  .links-column{
+    margin-left: 0px;
+  }
+  
+}
+
+/* Very Small Mobile View Adjustments */
+@media screen and (max-width: 480px) {
+  .footer-column h3 {
+    font-size: 14px; /* Smaller heading font size */
+  }
+
+  .footer-column ul li a {
+    font-size: 14px; /* Smaller font size for links */
+  }
+  .links-column{
+    margin-left: 0px;
+  }
+  
+
+  .footer-bottom {
+    font-size: 14px;
+  }
+}

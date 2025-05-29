@@ -60,20 +60,25 @@ export const updateUserDifficultyLevelWithTimeTaken = async (studentId) => {
 
   console.log("Calculated Difficulty Level:", difficulty_level);
   // Update user's difficulty level
-  await sequelize.query(
-    `
-    UPDATE users
-    SET difficulty_level = :difficulty
-    WHERE id = :studentId
-    `,
-    {
-      replacements: {
-        studentId,
-        difficulty: difficulty_level,
-      },
-      type: QueryTypes.UPDATE,
-    }
-  );
+  if (!isNaN(difficulty_level)) {
+    await sequelize.query(
+      `
+      UPDATE users
+      SET difficulty_level = :difficulty
+      WHERE id = :studentId
+      `,
+      {
+        replacements: {
+          studentId,
+          difficulty: difficulty_level,
+        },
+        type: QueryTypes.UPDATE,
+      }
+    );
+  } else {
+    console.error("Invalid float for difficulty_level:", difficulty_level);
+    // optionally: set a default value or skip the update
+  }
 
   return {
     student_id: studentId,

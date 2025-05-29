@@ -4,6 +4,7 @@ import { apiResponse } from "../utils/apiResponse.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'; 
 import User from '../models/userModel.js';
+import Enrollment from '../models/enrollmentmodel.js';
 import moment from "moment";
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -235,6 +236,103 @@ const registerUser = asyncHandler(async (req, res) => {
           next(error); // Pass errors to the error-handling middleware
       }
   });
+
+  const enroll_course = asyncHandler(async (req, res, next) => {
+    try {
+      const student_id = req.user.id;
+      const { course_id } = req.body;
+  
+      if (!course_id) {
+        throw new apiError(400, "All fields are required");
+      }
+  
+      // Check if student is already enrolled in the course
+      const existingEnrollment = await Enrollment.findOne({
+        where: { student_id, course_id }
+      });
+  
+      if (existingEnrollment) {
+        return res.status(409).json({
+          message: "Enrollment already exists for this student and course",
+        });
+      }
+  
+      // Create new enrollment
+      const newEnrollment = await Enrollment.create({
+        student_id,
+        course_id,
+        enrolled_at: new Date(),  // Manually set the date if needed
+      });
+  
+      return res.status(200).json(
+        new apiResponse(200, { isEnrolled: true, enrollmentDetails: newEnrollment }, "Enrolled in course successfully")
+      );      
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  });
+  
+  const getEnrollmentDetails = asyncHandler(async (req, res, next) => {
+    try {
+      const student_id = req.user.id; // assuming auth middleware adds req.user
+      const { course_id } = req.body;
+  
+      if (!course_id) {
+        return res.status(400).json(
+          new apiResponse(400, null, "Course ID is required")
+        );
+      }
+  
+      const enrollments = await Enrollment.findAll({
+        where: {
+          student_id,
+          course_id,
+        },
+      });
+  
+      if (!enrollments || enrollments.length === 0) {
+        return res.status(200).json(
+          new apiResponse(200, { isEnrolled: false }, "User is not enrolled in this course")
+        );
+      }
+  
+      return res.status(200).json(
+        new apiResponse(200, { isEnrolled: true }, "User is enrolled in this course")
+      );
+  
+    } catch (error) {
+      next(error);
+    }
+  });
+  const getEnrollmentData = asyncHandler(async (req, res, next) => {
+    try {
+      const student_id = req.user.id; // assuming auth middleware adds req.user
+     
+  
+      const enrollments = await Enrollment.findAll({
+        where: {
+          student_id,
+        },
+      });
+  
+      if (!enrollments || enrollments.length === 0) {
+        return res.status(200).json(
+          new apiResponse(200,  "Record Not Found")
+        );
+      }
+  
+      return res.status(200).json(
+        new apiResponse(200, enrollments, "All the data of the student enrollment fetched successfully.")
+      );
+  
+    } catch (error) {
+      next(error);
+    }
+  });
+  
+  
+  
     export{
 
         registerUser,
@@ -243,7 +341,10 @@ const registerUser = asyncHandler(async (req, res) => {
         refreshAccessToken,
         updateUserProfile,
         forgetPassword,
-        getUserProfile
+        getUserProfile,
+        enroll_course,
+        getEnrollmentDetails,
+        getEnrollmentData
       
     }
 

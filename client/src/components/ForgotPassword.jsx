@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     if (newPassword !== confirmPassword) {
       return setError("Passwords do not match.");
     }
-
+    const loadingToast = toast.loading("Reseting Your Password.Please Be Patient..");
     try {
       const res = await axios.post("http://localhost:5000/api/v1/users/forgetpassword", {
         email,
@@ -36,13 +36,16 @@ const ForgotPassword = () => {
         setEmail("");
         setNewPassword("");
         setConfirmPassword("");
+        toast.dismiss(loadingToast)
         toast.success("Passwrod changed Successfully. Redirecting to Sign In Page..!")
         navigate("/signin")
         
       } else {
+        toast.dismiss(loadingToast)
         setError("Failed to reset password. Please try again.");
       }
     } catch (err) {
+      toast.dismiss(loadingToast)
       setError("An error occurred while resetting the password.");
     }
   };

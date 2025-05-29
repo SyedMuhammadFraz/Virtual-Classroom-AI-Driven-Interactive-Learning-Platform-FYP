@@ -13,6 +13,7 @@ export const HandleLogout = async (navigate) => {
   const role = localStorage.getItem("role");
 
   if(role == "student"){
+    const loadingToast = toast.loading("Logging u out.Please be patient...");
   try {
     // Retrieve the token from localStorage
     const accessToken = localStorage.getItem("accessToken");
@@ -38,7 +39,7 @@ export const HandleLogout = async (navigate) => {
     if (response.status === 200) {
 
       console.log("Logged out successfully");
-      
+      toast.dismiss(loadingToast);
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken")
       localStorage.removeItem("user") 
@@ -50,6 +51,7 @@ export const HandleLogout = async (navigate) => {
       // Redirect to the login page or any other logic
     }
   } catch (error) {
+    toast.dismiss(loadingToast);
     if (error.response && error.response.data && error.response.data.message) {
       toast.error(error.response.data.message); // Show backend error message
     } else {
@@ -60,7 +62,8 @@ export const HandleLogout = async (navigate) => {
 
 }
 else{
-
+ 
+  const loadingToast = toast.loading("Logging u out.Please be patient...");
   try {
     // Retrieve the token from localStorage
     const accessToken = localStorage.getItem("accessToken");
@@ -84,7 +87,7 @@ else{
 
     // Handle successful logout
     if (response.status === 200) {
-
+      toast.dismiss(loadingToast);
       console.log("Logged out successfully");
       
       localStorage.removeItem("accessToken");
@@ -96,6 +99,7 @@ else{
 
     }
   } catch (error) {
+    toast.dismiss(loadingToast);
     if (error.response && error.response.data && error.response.data.message) {
       toast.error(error.response.data.message); // Show backend error message
     } else {

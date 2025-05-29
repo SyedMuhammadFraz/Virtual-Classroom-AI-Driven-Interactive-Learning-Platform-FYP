@@ -9,54 +9,137 @@ const AssignmentsQuizzesPage = () => {
   const [activeTab, setActiveTab] = useState("assignments");
   const [assignments, setAssignments] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission status
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const fetchAllAssignments = async () => {
     try {
+      const token = localStorage.getItem("accessToken");
+      
+      // 1. Get enrolled course_ids
+      const enrollmentRes = await axios.post(
+        "http://localhost:5000/api/v1/users/getenrolldata",
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      const courseIds = enrollmentRes.data.data.map((enroll) => enroll.course_id);
+  
+      // 2. Fetch lessons for enrolled courses
+      const lessonsRes = await axios.post("http://localhost:5000/api/v1/users/getlessons");
+      const lessons = lessonsRes.data.data;
+      const validLessons = lessons.filter((lesson) => courseIds.includes(lesson.course_id));
+      const validLessonIds = validLessons.map((lesson) => lesson.id);
+  
+      // 3. Fetch all assignments
       const response = await axios.post("http://localhost:5000/api/v1/users/getassignments");
+  
       if (response.status === 200 && response.data?.data) {
-        setAssignments(
-          response.data.data.map((assignment) => ({
-            id: assignment.id,
-            title: assignment.title,
-            description: assignment.description,
-            lesson: assignment.lesson_id,
-            deadline: assignment.due_date
-              ? new Date(assignment.due_date).toISOString().split("T")[0]
-              : "No deadline set",
-          }))
+        // 4. Filter assignments that belong to valid lessons
+        const filteredAssignments = response.data.data.filter((assignment) =>
+          validLessonIds.includes(assignment.lesson_id)
         );
+  
+        // 5. Check submission status for each filtered assignment
+        const assignmentsWithStatus = await Promise.all(
+          filteredAssignments.map(async (assignment) => {
+            try {
+              const res = await axios.post(
+                "http://localhost:5000/api/v1/users/getassignmentbyid",
+                { assignment_template_id: assignment.id },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+  
+              return {
+                id: assignment.id,
+                title: assignment.title,
+                description: assignment.description,
+                lesson: assignment.lesson_id,
+                deadline: assignment.due_date
+                  ? new Date(assignment.due_date).toISOString().split("T")[0]
+                  : "No deadline set",
+                submitted: res.data.submitted || false,
+              };
+            } catch (err) {
+              return {
+                id: assignment.id,
+                title: assignment.title,
+                description: assignment.description,
+                lesson: assignment.lesson_id,
+                deadline: assignment.due_date
+                  ? new Date(assignment.due_date).toISOString().split("T")[0]
+                  : "No deadline set",
+                submitted: false,
+              };
+            }
+          })
+        );
+  
+        setAssignments(assignmentsWithStatus);
       } else {
-        toast.error("No Assignments found.");
+        toast.error("No Assignments found Now .");
       }
     } catch (error) {
-      toast.error("Failed to fetch Assignments.");
+      toast.error("No Assignments Found Now.");
     }
   };
+  
 
   const fetchAllQuizzes = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/users/getquizes");
-      if (response.status === 200 && response.data?.data) {
-        setQuizzes(
-          response.data.data.map((quiz) => ({
-            id: quiz.id,
-            title: quiz.title,
-            description: "Complete the following quiz before the due date.",
-            lesson: quiz.lesson_id,
-            duration: quiz.created_at
-              ? new Date(quiz.created_at).toISOString().split("T")[0]
-              : "Not specified",
-          }))
+      const token = localStorage.getItem("accessToken");
+  
+      // 1. Get enrolled course IDs
+      const enrollmentRes = await axios.post(
+        "http://localhost:5000/api/v1/users/getenrolldata",
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      const courseIds = enrollmentRes.data.data.map((enroll) => enroll.course_id);
+  
+      // 2. Get all lessons for enrolled course IDs
+      const lessonsRes = await axios.post(
+        "http://localhost:5000/api/v1/users/getlessonfromcid",
+        { course_ids: courseIds }
+      );
+  
+      const lessonIds = lessonsRes.data.data.map((lesson) => lesson.id);
+      console.log(lessonIds)
+      // 3. Get all quizzes
+      const quizzesRes = await axios.post("http://localhost:5000/api/v1/users/getquizes");
+  
+      if (quizzesRes.status === 200 && quizzesRes.data?.data) {
+        // 4. Filter quizzes where lesson_id is in lessonIds
+        const filteredQuizzes = quizzesRes.data.data.filter((quiz) =>
+          lessonIds.includes(quiz.lesson_id)
         );
+  
+        // 5. Format quizzes
+        const formattedQuizzes = filteredQuizzes.map((quiz) => ({
+          id: quiz.id,
+          title: quiz.title,
+          description: "Complete the following quiz before the due date.",
+          lesson: quiz.lesson_id,
+          duration: quiz.created_at
+            ? new Date(quiz.created_at).toISOString().split("T")[0]
+            : "Not specified",
+        }));
+  
+        setQuizzes(formattedQuizzes);
       } else {
         toast.error("No Quizzes found.");
       }
     } catch (error) {
+      console.error("Error fetching quizzes:", error);
       toast.error("Failed to fetch Quizzes.");
     }
   };
+  
 
   useEffect(() => {
     fetchAllAssignments();
@@ -64,14 +147,13 @@ const AssignmentsQuizzesPage = () => {
   }, []);
 
   const getCourseTitleById = async (lessonId) => {
-    // Add your logic to fetch course title by lessonId
-    return "Course Title"; // Replace with actual API call or logic
+    return "Course Title";
   };
 
   const handleAssignmentSubmit = async (assignment) => {
-    if (isSubmitting) return; // Prevent multiple submissions
+    if (isSubmitting || assignment.submitted) return;
 
-    setIsSubmitting(true); // Set submission in progress
+    setIsSubmitting(true);
     try {
       toast.info("Generating assignment...");
       const token = localStorage.getItem("accessToken");
@@ -98,7 +180,7 @@ const AssignmentsQuizzesPage = () => {
       toast.error("Failed to generate assignment.");
       toast.dismiss();
     } finally {
-      setIsSubmitting(false); // Reset submitting state
+      setIsSubmitting(false);
     }
   };
 
@@ -146,11 +228,13 @@ const AssignmentsQuizzesPage = () => {
                     Deadline: {assignment.deadline}
                   </p>
                   <button
-                    className="assignment-button"
+                    className={`assignment-button ${
+                      assignment.submitted ? "submitted" : ""
+                    }`}
                     onClick={() => handleAssignmentSubmit(assignment)}
-                    disabled={isSubmitting} // Disable button if submission is in progress
+                    disabled={isSubmitting || assignment.submitted}
                   >
-                    Submit
+                    {assignment.submitted ? "Submitted" : "Submit"}
                   </button>
                 </div>
               </div>
@@ -172,24 +256,26 @@ const AssignmentsQuizzesPage = () => {
                     onClick={async () => {
                       try {
                         toast.info("Please wait, starting your quiz...");
-                        // 1. Fetch the course title by lesson ID
                         const courseTitle = await getCourseTitleById(quiz.lesson);
                         const token = localStorage.getItem("accessToken");
-                        // 2. Generate the quiz by making a POST request
-                        const response = await axios.post("http://localhost:5000/api/v1/users/generateQuiz", {
-                          lessonId: quiz.lesson,
-                          lessonName: quiz.title,
-                          course: courseTitle,
-                          quizTemplateId: quiz.id
-                        }, {
-                          headers: {
-                            Authorization: `Bearer ${token}`, // Send token in Authorization header
+
+                        const response = await axios.post(
+                          "http://localhost:5000/api/v1/users/generateQuiz",
+                          {
+                            lessonId: quiz.lesson,
+                            lessonName: quiz.title,
+                            course: courseTitle,
+                            quizTemplateId: quiz.id,
+                          },
+                          {
+                            headers: {
+                              Authorization: `Bearer ${token}`,
+                            },
                           }
-                        });
+                        );
 
                         const data = response.data;
 
-                        // 3. Navigate to the quiz page with the generated quiz
                         navigate("/quiz", {
                           state: {
                             title: quiz.title,

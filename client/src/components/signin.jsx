@@ -20,26 +20,23 @@ const SignIn = () => {
     }
 
     try {
-      // Check user login status
       const userResponse = await axios.get("http://localhost:5000/api/v1/users/verify", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       if (userResponse.status === 200) {
-        navigate("/dashboard"); // Redirect to student dashboard
+        navigate("/dashboard");
         return;
       }
     } catch (error) {
       console.log("User verification failed, trying admin...");
-
-      // Check admin login status if user verification fails
       try {
         const adminResponse = await axios.get("http://localhost:5000/api/v1/users/verifyadmin", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
 
         if (adminResponse.status === 200) {
-          navigate("/admin"); // Redirect to admin dashboard
+          navigate("/admin");
         }
       } catch (error) {
         console.error("Invalid token or access denied.");
@@ -47,20 +44,23 @@ const SignIn = () => {
     }
   };
 
-  // Handle login request for students
+  // Handle student login
   const handleStudentLogin = async () => {
+    const loadingToast = toast.loading("Checking your credentials, please be patient...");
     try {
       const response = await axios.post("http://localhost:5000/api/v1/users/login", { email, password });
       const { accessToken, refreshToken, user } = response.data.data;
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("user", JSON.stringify(user)); // Save user object in localStorage
+      localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("role", "student");
 
+      toast.dismiss(loadingToast);
       toast.success("User logged in successfully!");
-      navigate("/dashboard"); // Redirect to student dashboard
+      navigate("/dashboard");
     } catch (error) {
+      toast.dismiss(loadingToast);
       if (error.response && error.response.data) {
         toast.error(error.response.data.message || "Login failed. Please try again.");
       } else {
@@ -70,8 +70,9 @@ const SignIn = () => {
     }
   };
 
-  // Handle login request for admin
+  // Handle admin login
   const handleAdminLogin = async () => {
+    const loadingToast = toast.loading("Checking your credentials, please be patient...");
     try {
       const response = await axios.post("http://localhost:5000/api/v1/users/adminlogin", { email, password });
       const { accessToken, refreshToken } = response.data.data;
@@ -80,9 +81,11 @@ const SignIn = () => {
       localStorage.setItem("refreshToken", refreshToken);
       localStorage.setItem("role", "admin");
 
+      toast.dismiss(loadingToast);
       toast.success("Admin logged in successfully!");
-      navigate("/admin"); // Redirect to admin dashboard
+      navigate("/admin");
     } catch (error) {
+      toast.dismiss(loadingToast);
       if (error.response && error.response.data) {
         toast.error(error.response.data.message || "Login failed. Please try again.");
       } else {
@@ -94,20 +97,17 @@ const SignIn = () => {
 
   // Handle login form submission
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent form reload
-
+    e.preventDefault();
     if (email === "admin@123.com" && password === "admin_123") {
-      // Admin login
       handleAdminLogin();
     } else {
-      // Student login
       handleStudentLogin();
     }
   };
 
   useEffect(() => {
     console.log("Checking login status...");
-    checkLogin(); // Check if the user is already logged in
+    checkLogin();
   }, []);
 
   return (
@@ -127,7 +127,6 @@ const SignIn = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-
             <input
               type="password"
               name="password"
@@ -138,7 +137,6 @@ const SignIn = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-
             <a href="/forgot-password" className="forgot-password">
               Forgot your Password?
             </a>

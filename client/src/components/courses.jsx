@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
+import { useNavigate } from "react-router-dom";
 import "../styles/courses.css";
 import axios from "axios";
 import Sidebar from "./sidebar";
 import { toast } from "react-toastify";
+import ConfirmationModal from "../modals/confirmation-modal"; // Assuming you have the modal component
 
 const CoursesPage = () => {
   const navigate = useNavigate();
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [courses, setCourses] = useState([]); // State to store courses
-  const [lessons, setLessons] = useState([]); // State to store lessons
+  const [courses, setCourses] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [pendingCourseId, setPendingCourseId] = useState(null); // Track course to enroll in
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
 
-  // Fetch courses from the API
+  const getToken = () => localStorage.getItem("accessToken");
+
   const fetchAllCourses = async () => {
     try {
       const response = await axios.post(
@@ -32,17 +36,16 @@ const CoursesPage = () => {
         }
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to fetch Courses.");
+      toast.error("Failed to fetch Courses.");
       console.error("Error fetching All Courses:", error);
     }
   };
 
-  // Fetch lessons for the selected course
   const fetchLessonsForCourse = async (courseId) => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/v1/users/getlessons",
-        { courseId } // Send the courseId to fetch specific lessons
+        { courseId }
       );
 
       if (response.status === 200) {
@@ -60,10 +63,11 @@ const CoursesPage = () => {
         }
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to fetch Lessons.");
+      toast.error("Failed to fetch Lessons.");
       console.error("Error fetching Lessons:", error);
     }
   };
+
   const generateRandomDescription = () => {
     const descriptions = [
       "This lesson covers the core concepts and fundamentals of the topic.",
@@ -85,7 +89,7 @@ const CoursesPage = () => {
   };
 
   useEffect(() => {
-    fetchAllCourses(); // Fetch courses when the component mounts
+    fetchAllCourses();
   }, []);
 
   const handleLessonClick = async (lesson) => {
@@ -124,27 +128,25 @@ const CoursesPage = () => {
       <div className="courses-content">
         <h2>Select a Course</h2>
 
-        {/* Course Selection */}
         <div className="courses-list">
           {courses.map((course) => (
             <div
               key={course.id}
               className="course-card"
-              onClick={() => handleCourseClick(course.id)} // On course click, fetch lessons
+              onClick={() => handleCourseClick(course.id)}
             >
               <h3>{course.name}</h3>
             </div>
           ))}
         </div>
 
-        {/* Lectures for the Selected Course */}
         {selectedCourse && (
           <div className="lectures-list">
             <h2>
               Lectures for {courses.find((c) => c.id === selectedCourse)?.name}
             </h2>
             {lessons
-              .filter((lesson) => lesson.course === selectedCourse) // Filter lessons for the selected course
+              .filter((lesson) => lesson.course === selectedCourse)
               .map((lesson) => (
                 <div
                   key={lesson.id}
@@ -158,6 +160,15 @@ const CoursesPage = () => {
           </div>
         )}
       </div>
+
+      {/* Confirmation Modal for Enrollment */}
+      {showModal && (
+        <ConfirmationModal
+          message="You're not enrolled in this course. Do you want to enroll now?"
+          onConfirm={enrollInCourse} // Call enrollInCourse if confirmed
+          onCancel={() => setShowModal(false)} // Close the modal if canceled
+        />
+      )}
     </div>
   );
 };

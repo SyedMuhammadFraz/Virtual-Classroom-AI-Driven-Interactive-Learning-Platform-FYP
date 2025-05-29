@@ -43,7 +43,7 @@ const AdminDashboard = () => {
   const deleteItem = async (list, setList, id, title) => {
 
     if (title == "Courses") {
-
+      const loadingToast = toast.loading("Deleting Quiz...");
       const itemToDelete = list.find((item) => item.id === id);
       const name = itemToDelete.name;
       try {
@@ -60,9 +60,10 @@ const AdminDashboard = () => {
         console.log(response);
         setList(list.filter((item) => item.id !== id));
         console.log("Course Deleted successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Course Deleted Successfully!");
       } catch (error) {
-
+         toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -72,7 +73,7 @@ const AdminDashboard = () => {
       }
     }
     if (title == "Lessons") {
-
+      const loadingToast = toast.loading("Deleting Lesson ...");
       const itemToDelete = list.find((item) => item.id === id);
       const title = itemToDelete.name;
       try {
@@ -89,9 +90,10 @@ const AdminDashboard = () => {
         console.log(response);
         setList(list.filter((item) => item.id !== id));
         console.log("Lesson Deleted successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Lesson Deleted Successfully!");
       } catch (error) {
-
+        toast.success("Lesson Deleted Successfully!");
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -101,7 +103,8 @@ const AdminDashboard = () => {
       }
     }
     if (title == "Quizzes") {
-
+      
+      const loadingToast = toast.loading("Deleting Quiz ...");
       const itemToDelete = list.find((item) => item.id === id);
       const title = itemToDelete.title;
       try {
@@ -118,9 +121,10 @@ const AdminDashboard = () => {
         console.log(response);
         setList(list.filter((item) => item.id !== id));
         console.log("Quiz Deleted successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Quiz Deleted Successfully!");
       } catch (error) {
-
+        toast.dismiss(loadingToast) 
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -130,7 +134,8 @@ const AdminDashboard = () => {
       }
     }
     if (title == "Assignments") {
-
+       
+      const loadingToast = toast.loading("Deleting Assignment ...");
       const itemToDelete = list.find((item) => item.id === id);
       const title = itemToDelete.title;
       try {
@@ -147,9 +152,10 @@ const AdminDashboard = () => {
         console.log(response);
         setList(list.filter((item) => item.id !== id));
         console.log("Assignment Deleted successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Assignment Deleted Successfully!");
       } catch (error) {
-
+        toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -176,7 +182,7 @@ const AdminDashboard = () => {
 
         if (name) {
           // Create a copy of the courses array and update the course name
-
+          const loadingToast = toast.loading("Updating Course ...");
           try {
 
             const response = await axios.post(
@@ -196,11 +202,12 @@ const AdminDashboard = () => {
             setCourses(updatedCourses);
             console.log(updatedCourses);
             console.log("Course Updated successfully:", response.data);
+            toast.dismiss(loadingToast)
             toast.success("Course Name Updated Successfully!");
           }
 
           catch (error) {
-
+            toast.dismiss(loadingToast)
             if (error.response && error.response.data && error.response.data.message) {
               toast.error(error.response.data.message); // Show backend error message
             } else {
@@ -221,7 +228,7 @@ const AdminDashboard = () => {
 
         const title = window.prompt(`Enter the new Lesson name for ${lessonToEdit.name}:`);
         if (title) {
-
+          const loadingToast = toast.loading("Updating Lesson Name ...");
           try {
 
             const response = await axios.post(
@@ -241,11 +248,12 @@ const AdminDashboard = () => {
             setLessons(updatedLessons);
             console.log(updatedLessons);
             console.log("Lesson Updated successfully:", response.data);
+            toast.dismiss(loadingToast)
             toast.success("Lesson Name Updated Successfully!");
           }
 
           catch (error) {
-
+            toast.dismiss(loadingToast)
             if (error.response && error.response.data && error.response.data.message) {
               toast.error(error.response.data.message); // Show backend error message
             } else {
@@ -265,7 +273,7 @@ const AdminDashboard = () => {
 
         const title = window.prompt(`Enter the new Quiz name for ${quizToEdit.title}:`);
         if (title) {
-
+          const loadingToast = toast.loading("Updating Quiz Name...");
           try {
 
             const response = await axios.post(
@@ -285,11 +293,12 @@ const AdminDashboard = () => {
             setQuizzes(updatedquizes);
             console.log(updatedquizes);
             console.log("Quiz Updated successfully:", response.data);
+            toast.dismiss(loadingToast)
             toast.success("Quiz Name Updated Successfully!");
           }
 
           catch (error) {
-
+            toast.dismiss(loadingToast)
             if (error.response && error.response.data && error.response.data.message) {
               toast.error(error.response.data.message); // Show backend error message
             } else {
@@ -310,7 +319,7 @@ const AdminDashboard = () => {
 
         const title = window.prompt(`Enter the new Assignment name for ${assignmentToEdit.title}:`);
         if (title) {
-
+          const loadingToast = toast.loading("Updating Assignment Name...");
           try {
 
             const response = await axios.post(
@@ -330,11 +339,12 @@ const AdminDashboard = () => {
             setAssignments(updatedassignments);
             console.log(updatedassignments);
             console.log("Assignment Updated successfully:", response.data);
+            toast.dismiss(loadingToast)
             toast.success("Assignment Name Updated Successfully!");
           }
 
           catch (error) {
-
+            toast.dismiss(loadingToast)
             if (error.response && error.response.data && error.response.data.message) {
               toast.error(error.response.data.message); // Show backend error message
             } else {
@@ -376,14 +386,14 @@ const AdminDashboard = () => {
     setStudentProgress(data);
   };
 
-  const fetchTestReports = async () => {
-    const reports = [
-      { student: "John Doe", quiz: "Quiz 1", score: "85%" },
-      { student: "Jane Smith", quiz: "Quiz 1", score: "90%" },
-      { student: "Mike Johnson", quiz: "Quiz 2", score: "75%" },
-    ];
-    setTestReports(reports);
-  };
+  // const fetchTestReports = async () => {
+  //   const reports = [
+  //     { student: "John Doe", quiz: "Quiz 1", score: "85%" },
+  //     { student: "Jane Smith", quiz: "Quiz 1", score: "90%" },
+  //     { student: "Mike Johnson", quiz: "Quiz 2", score: "75%" },
+  //   ];
+  //   setTestReports(reports);
+  // };
 
   const fetchAllCourses = async () => {
     try {
@@ -498,11 +508,11 @@ const AdminDashboard = () => {
   // Fetch data when the component mounts
   useEffect(() => {
     fetchStudentProgress();
-    fetchTestReports();
     fetchAllCourses();
     fetchAllLessons();
     fetchAllQuizes();
     fetchAllAssignments();
+    loadTestReports();
   }, []);
 
 
@@ -522,22 +532,14 @@ const AdminDashboard = () => {
     );
   });
 
-  const filteredTestReports = testReports.filter((report) => {
-    return (
-      (filters.studentName === "" ||
-        report.student
-          .toLowerCase()
-          .includes(filters.studentName.toLowerCase())) &&
-      (filters.quiz === "" ||
-        report.quiz.toLowerCase().includes(filters.quiz.toLowerCase()))
-    );
-  });
+
   const addCourse = async () => {
 
     if (courseName.trim() && courseDescription.trim()) {
 
       const newCourses = [...courses, { id: courseId, name: courseName, description: courseDescription }];
       setCourses(newCourses);
+      const loadingToast = toast.loading("Adding Course...");
       try {
         // Send the courseName and courseDescription to the API
         const response = await axios.post(
@@ -559,11 +561,13 @@ const AdminDashboard = () => {
         setCourseDescription("");
         setCourseID("")
         console.log("Course added successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Course Added Successfully!");
       }
 
       // Handle the response if needed
       catch (error) {
+        toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -579,7 +583,7 @@ const AdminDashboard = () => {
 
     let cId = "";
     if (lessonName.trim() && lessonCourse) {
-
+      const loadingToast = toast.loading("Adding Lesson...");
       try {
 
         const response = await axios.post(
@@ -623,9 +627,10 @@ const AdminDashboard = () => {
         setLessonName("");
         setLessonCourse("");
         console.log("Lesson added successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Lesson Added Successfully!");
       } catch (error) {
-
+        toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -641,8 +646,7 @@ const AdminDashboard = () => {
     if (assignmentTitle.trim() && assignmentDescription.trim() && assignmentLesson) {
 
       let lId = "";
-      let cId = "";
-
+      const loadingToast = toast.loading("Adding Assignment...");
       try {
 
         const response = await axios.post(
@@ -700,9 +704,10 @@ const AdminDashboard = () => {
         setAssignmentLesson("");
         setAssignmentDescription("")
         console.log("Assignment added successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Assignment Added Successfully!");
       } catch (error) {
-
+        toast.dismiss(loadingToast)
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(error.response.data.message); // Show backend error message
         } else {
@@ -715,10 +720,11 @@ const AdminDashboard = () => {
   };
 
   const addQuiz = async () => {
+
     if (quizTitle.trim() && quizLesson) {
-
+     
       let lId = "";
-
+      const loadingToast = toast.loading("Adding Quiz Credentials..");
       try {
 
         const response = await axios.post(
@@ -735,14 +741,14 @@ const AdminDashboard = () => {
         lId = response.data.data;
 
       } catch (error) {
-
+        toast.dismiss(loadingToast)
         console.error("Error in fetching the id", error.message)
 
 
       }
       try {
 
-
+        
         const response = await axios.post(
           "http://localhost:5000/api/v1/users/addquiz",
           {
@@ -765,6 +771,7 @@ const AdminDashboard = () => {
         setQuizTitle("");
         setQuizLesson("");
         console.log("Quiz added successfully:", response.data);
+        toast.dismiss(loadingToast)
         toast.success("Quiz Added Successfully!");
 
       } catch (error) {
@@ -789,11 +796,8 @@ const AdminDashboard = () => {
 // Fetch user profile (student details)
   const fetchUserProfile = async () => {
   try {
-    const response = await axios.get(`http://localhost:5000/api/v1/users/getuserdetails`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,  // Assuming JWT token is stored in localStorage
-      }
-    });
+    const response = await axios.get('http://localhost:5000/api/v1/users/getusers');
+    
     return response.data.data;  // Assuming 'data' contains user details like fullname
   } catch (error) {
     console.error("Error fetching user profile", error);
@@ -802,11 +806,8 @@ const AdminDashboard = () => {
 };
   const fetchQuizData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/users/getquizdata`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,  // Assuming JWT token is stored in localStorage
-        }
-      });
+      const response = await axios.post('http://localhost:5000/api/v1/users/getquizdata');
+       
     return response.data.data;  // Assuming 'data' contains the quiz data array
   } catch (error) {
     console.error("Error fetching quiz data", error);
@@ -815,8 +816,8 @@ const AdminDashboard = () => {
 };
 const fetchQuizName = async (quizTemplateId) => {
   try {
-    const response = await axios.post("http://localhost:5000/api/v1/users/getquiztitle", { quiz_template_id: quizTemplateId });
-    return response.data.quizTitle; // Assuming quizTitle is the key for quiz name
+    const response = await axios.post("http://localhost:5000/api/v1/users/getquiztitle", { id: quizTemplateId });
+    return response.data.data; // Assuming quizTitle is the key for quiz name
   } catch (error) {
     console.error("Error fetching quiz title", error);
     return "Unknown Quiz";
@@ -824,26 +825,33 @@ const fetchQuizName = async (quizTemplateId) => {
 };
 const loadTestReports = async () => {
   try {
-    const quizData = await fetchQuizData();  // Get quiz data (score and template_id)
+    const quizData = await fetchQuizData();
+    const userProfiles = await fetchUserProfile();  // Note: it's an array!
+
     const enrichedTestReports = await Promise.all(
       quizData.map(async (report) => {
-        const userProfile = await fetchUserProfile();  // Get student details
-        const quizName = await fetchQuizName(report.quiz_template_id);  // Get quiz name
-        
+        const quizName = await fetchQuizName(report.quiz_template_id);
+        // Find the correct user based on student_id
+        // const user = userProfiles[report.student_id-1];  // VERY BASIC assumption if IDs are sequential
+        // OR safer way: find by index
+        const user = userProfiles.find(u => u.id === report.student_id);
+
         return {
-          student: userProfile ? userProfile.fullname : "Unknown Student",
+          student: user ? user.fullname : "Unknown Student",
           quiz: quizName,
-          score: report.score_percentage,
+          score: report.total_score_percentage,
         };
       })
     );
-    setTestReports(enrichedTestReports);  // Set state with full report data
+
+    setTestReports(enrichedTestReports);
   } catch (error) {
     console.error("Error loading test reports", error);
   } finally {
-    setLoading(false);  // Stop loading when done
+    setLoading(false);
   }
 };
+
 
 
   return (
@@ -1034,7 +1042,10 @@ const loadTestReports = async () => {
 
       {/* Test Reports Table */}
       <div className="admin-table">
-        <h2>Test Reports</h2>
+      <h2>Test Reports</h2>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
         <table>
           <thead>
             <tr>
@@ -1044,7 +1055,7 @@ const loadTestReports = async () => {
             </tr>
           </thead>
           <tbody>
-            {filteredTestReports.map((report, index) => (
+            {testReports.map((report, index) => (
               <tr key={index}>
                 <td>{report.student}</td>
                 <td>{report.quiz}</td>
@@ -1053,7 +1064,8 @@ const loadTestReports = async () => {
             ))}
           </tbody>
         </table>
-      </div>
+      )}
+    </div>
       <div className="logout-container">
         <button className="logout-btn" onClick={() => setShowModal(true)}>Log Out</button>
       </div>
