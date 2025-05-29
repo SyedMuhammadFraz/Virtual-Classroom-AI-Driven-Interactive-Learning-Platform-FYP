@@ -1,17 +1,24 @@
+/* Layout Container */
 .lecturers-page {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f9f9f9;
+  background-color: #f5f7fa;
   overflow: hidden;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #2e2e2e;
 }
 
 /* Heading Section */
 .course-name {
   text-align: center;
-  padding: 20px;
-  background-color: #e6f7ff; /* Light blue background for heading */
-  margin: 0; /* Remove default margin */
+  padding: 24px;
+  background-color: #e0e7ff;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  color: #3730a3;
 }
 
 /* Main Content Section */
@@ -27,9 +34,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff; /* White background for avatar */
+  background-color: #fdfdff;
   padding: 20px;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #dee2e6;
 }
 
 /* Video Placeholder Section */
@@ -38,9 +45,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff; /* White background for video */
+  background-color: #fdfdff;
   padding: 20px;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #dee2e6;
+}
+
+.video-placeholder video {
+  width: 100%;
+  max-width: 720px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 /* Chatbot Section */
@@ -50,52 +64,111 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: #f0f5ff; /* Light gray background for chatbot */
+  background-color: #f0f4ff;
   padding: 20px;
-  overflow-y: auto; /* Adds scrollbar if content overflows */
+  overflow-y: auto;
+  gap: 16px;
 }
 
 .chatbot-box {
-  width: 90%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 480px;
   display: flex;
-  align-items: center;
-  gap: 10px; /* Adds spacing between input and button */
+  gap: 12px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 .chatbot-box input {
   flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
 }
 
 .chatbot-box button {
-  padding: 10px 20px;
+  padding: 10px 16px;
+  background-color: #4f46e5;
+  color: #ffffff;
   border: none;
-  background-color: #1890ff;
-  color: #fff;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
 }
 
 .chatbot-box button:hover {
-  background-color: #0056b3;
+  background-color: #4338ca;
+}
+
+.chatbot-response {
+  width: 100%;
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 18px;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+.chatbot-response h3 {
+  margin-top: 0;
+  color: #4338ca;
+  font-weight: 600;
+}
+
+.chatbot-response p {
+  margin: 12px 0;
+}
+
+.context-section {
+  margin-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 10px;
+}
+
+.context-section h4 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+  color: #4b5563;
+}
+
+.context-text {
+  font-size: 0.95rem;
+  background-color: #f9fafb;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Error Text */
+.text-red-500 {
+  color: #dc2626;
+  font-weight: 500;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .content {
+  .lesson-content {
     flex-direction: column;
   }
-  .avatar-section, .video-placeholder, .chatbot-container {
+
+  .avatar-section,
+  .video-placeholder,
+  .chatbot-container {
     flex: none;
     width: 100%;
     border-right: none;
     border-bottom: 1px solid #ccc;
+  }
+
+  .chatbot-box,
+  .chatbot-response {
+    width: 100%;
   }
 }

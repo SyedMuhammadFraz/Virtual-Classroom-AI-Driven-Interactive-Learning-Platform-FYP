@@ -21,10 +21,12 @@ const CoursesPage = () => {
 
       if (response.status === 200) {
         if (response.data?.data) {
-          setCourses(response.data.data.map((course) => ({
-            id: course.id,
-            name: course.name,
-          })));
+          setCourses(
+            response.data.data.map((course) => ({
+              id: course.id,
+              name: course.name,
+            }))
+          );
         } else {
           toast.error("No courses found.");
         }
@@ -45,12 +47,14 @@ const CoursesPage = () => {
 
       if (response.status === 200) {
         if (response.data?.data) {
-          setLessons(response.data.data.map((lesson) => ({
-            id: lesson.id,
-            title: lesson.title,
-            description: generateRandomDescription(),
-            course: lesson.course_id,
-          })));
+          setLessons(
+            response.data.data.map((lesson) => ({
+              id: lesson.id,
+              title: lesson.title,
+              description: generateRandomDescription(),
+              course: lesson.course_id,
+            }))
+          );
         } else {
           toast.error("No lessons found.");
         }
@@ -69,11 +73,11 @@ const CoursesPage = () => {
       "Learn key strategies and approaches to master this subject efficiently.",
       "Explore advanced concepts and hands-on examples to boost your skills.",
       "This lesson introduces essential methods and tools to help you excel.",
-      "Understand the practical aspects and challenges of the topic in real-world scenarios."
+      "Understand the practical aspects and challenges of the topic in real-world scenarios.",
     ];
-  const randomIndex = Math.floor(Math.random() * descriptions.length);
-  return descriptions[randomIndex];
-  }  
+    const randomIndex = Math.floor(Math.random() * descriptions.length);
+    return descriptions[randomIndex];
+  };
   // Handle course selection
   const handleCourseClick = (courseId) => {
     setSelectedCourse(courseId); // Set the selected course
@@ -83,6 +87,36 @@ const CoursesPage = () => {
   useEffect(() => {
     fetchAllCourses(); // Fetch courses when the component mounts
   }, []);
+
+  const handleLessonClick = async (lesson) => {
+  try {
+    toast.info("Generating video, please wait...");
+
+    const response = await axios.post("http://localhost:5002/generate_lesson", {
+      topic: lesson.title
+    });
+
+    if (response.data && response.data.video_url) {
+      toast.success("Lesson generated!");
+      
+      // Navigate and pass video data via state (optional)
+      navigate(`/lectures/${lesson.course}`, {
+        state: {
+          lesson,
+          video_url: response.data.video_url,
+          image_url: response.data.image_url
+        }
+      });
+
+    } else {
+      toast.error("Video not generated. Try again.");
+    }
+  } catch (error) {
+    console.error("Error generating lesson:", error);
+    toast.error("Failed to generate video.");
+  }
+};
+
 
   return (
     <div className="courses-page">
@@ -106,14 +140,16 @@ const CoursesPage = () => {
         {/* Lectures for the Selected Course */}
         {selectedCourse && (
           <div className="lectures-list">
-            <h2>Lectures for {courses.find((c) => c.id === selectedCourse)?.name}</h2>
+            <h2>
+              Lectures for {courses.find((c) => c.id === selectedCourse)?.name}
+            </h2>
             {lessons
               .filter((lesson) => lesson.course === selectedCourse) // Filter lessons for the selected course
               .map((lesson) => (
                 <div
                   key={lesson.id}
                   className="lecture-card"
-                  onClick={() => navigate(`/lectures/${lesson.course}`)} // Navigate to LecturesPage for selected lesson
+                  onClick={() => handleLessonClick(lesson)}
                 >
                   <h4>{lesson.title}</h4>
                   <p>{lesson.description}</p>
