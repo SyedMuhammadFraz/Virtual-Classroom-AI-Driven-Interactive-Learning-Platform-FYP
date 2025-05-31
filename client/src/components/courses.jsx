@@ -107,7 +107,7 @@ const CoursesPage = () => {
       );
 
       if (response.status === 200 && response.data.success) {
-        toast.dismiss(loadingToast);  // Dismiss loading toast if it's still showing
+        toast.dismiss(loadingToast); 
         toast.success(response.data.message || "Enrolled successfully!");
         setSelectedCourse(pendingCourseId);
         fetchLessonsForCourse(pendingCourseId);

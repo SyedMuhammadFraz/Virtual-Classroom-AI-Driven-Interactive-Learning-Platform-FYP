@@ -30,7 +30,7 @@ function Video() {
                 <p>Engage in an immersive, teacher-less learning experience. Our platform brings knowledge to life through interactive 3D models and smart lesson delivery..</p>
                 <div className='video-btns'>
                     <button className='video-btn' onClick={() => navigate('/signin')}>Get Started</button>
-                    <button className='video-btn'>About Project</button>
+                    <button className='video-btn' onClick={() => navigate('/signup')}>Register Now</button>
                 </div>
                 <hr className='video-line' />
                 <div className="rating">
