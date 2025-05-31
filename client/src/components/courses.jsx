@@ -82,45 +82,97 @@ const CoursesPage = () => {
     const randomIndex = Math.floor(Math.random() * descriptions.length);
     return descriptions[randomIndex];
   };
-  // Handle course selection
-  const handleCourseClick = (courseId) => {
-    setSelectedCourse(courseId); // Set the selected course
-    fetchLessonsForCourse(courseId); // Fetch lessons for the selected course
-  };
-
   useEffect(() => {
     fetchAllCourses();
   }, []);
 
   const handleLessonClick = async (lesson) => {
-  try {
-    toast.info("Generating video, please wait...");
+    try {
+      toast.info("Generating video, please wait...");
 
-    const response = await axios.post("http://localhost:5002/generate_lesson", {
-      topic: lesson.title
-    });
-
-    if (response.data && response.data.video_url) {
-      toast.success("Lesson generated!");
-      
-      // Navigate and pass video data via state (optional)
-      navigate(`/lectures/${lesson.course}`, {
-        state: {
-          lesson,
-          video_url: response.data.video_url,
-          image_url: response.data.image_url
+      const response = await axios.post(
+        "http://localhost:5002/generate_lesson",
+        {
+          topic: lesson.title,
         }
-      });
+      );
 
-    } else {
-      toast.error("Video not generated. Try again.");
+      if (response.data && response.data.video_url) {
+        toast.success("Lesson generated!");
+
+        // Navigate and pass video data via state (optional)
+        navigate(`/lectures/${lesson.course}`, {
+          state: {
+            lesson,
+            video_url: response.data.video_url,
+            image_url: response.data.image_url,
+          },
+        });
+      } else {
+        toast.error("Video not generated. Try again.");
+      }
+    } catch (error) {
+      console.error("Error generating lesson:", error);
+      toast.error("Failed to generate video.");
     }
-  } catch (error) {
-    console.error("Error generating lesson:", error);
-    toast.error("Failed to generate video.");
-  }
-};
+  };
 
+  const enrollInCourse = async () => {
+    const loadingToast = toast.loading("Enrolling in Course . Be Patient");
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/users/enrollcourse",
+        { course_id: pendingCourseId },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
+      if (response.status === 200 && response.data.success) {
+        toast.dismiss(loadingToast);
+        toast.success(response.data.message || "Enrolled successfully!");
+        setSelectedCourse(pendingCourseId);
+        fetchLessonsForCourse(pendingCourseId);
+      } else {
+        toast.error(response.data.message || "Error enrolling in the course.");
+      }
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error("Failed to enroll.");
+      console.error("Enroll error:", error);
+    } finally {
+      setShowModal(false); // Close the modal after enrollment
+    }
+  };
+
+  const handleCourseClick = async (courseId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/users/getenrolldetails",
+        { course_id: courseId },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
+      const isEnrolled = response.data?.data?.isEnrolled;
+
+      if (isEnrolled) {
+        setSelectedCourse(courseId);
+        fetchLessonsForCourse(courseId);
+      } else {
+        setPendingCourseId(courseId); // Store the course ID to enroll in
+        setShowModal(true); // Show the confirmation modal
+      }
+    } catch (error) {
+      toast.error("Error checking enrollment.");
+      console.error("Enrollment check failed:", error);
+    }
+  };
 
   return (
     <div className="courses-page">

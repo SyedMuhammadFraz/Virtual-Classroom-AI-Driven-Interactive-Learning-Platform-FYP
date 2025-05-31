@@ -54,7 +54,7 @@ function Lecture() {
     setContext([]);
 
     try {
-      const response = await axios.post("http://localhost:5002/ask", {
+      const response = await axios.post("http://localhost:5004/ask", {
         question,
       });
       setAnswer(response.data.answer);
