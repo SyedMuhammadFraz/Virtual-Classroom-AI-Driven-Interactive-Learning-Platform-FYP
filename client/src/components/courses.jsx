@@ -18,14 +18,22 @@ const CoursesPage = () => {
 
   const fetchAllCourses = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/users/getcourses", {});
-      if (response.status === 200 && response.data?.data) {
-        setCourses(response.data.data.map(course => ({
-          id: course.id,
-          name: course.name,
-        })));
-      } else {
-        toast.error("No courses found.");
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/users/getcourses",
+        {}
+      );
+
+      if (response.status === 200) {
+        if (response.data?.data) {
+          setCourses(
+            response.data.data.map((course) => ({
+              id: course.id,
+              name: course.name,
+            }))
+          );
+        } else {
+          toast.error("No courses found.");
+        }
       }
     } catch (error) {
       toast.error("Failed to fetch Courses.");
@@ -40,15 +48,19 @@ const CoursesPage = () => {
         { courseId }
       );
 
-      if (response.status === 200 && response.data?.data) {
-        setLessons(response.data.data.map((lesson) => ({
-          id: lesson.id,
-          title: lesson.title,
-          description: generateRandomDescription(),
-          course: lesson.course_id,
-        })));
-      } else {
-        toast.error("No lessons found.");
+      if (response.status === 200) {
+        if (response.data?.data) {
+          setLessons(
+            response.data.data.map((lesson) => ({
+              id: lesson.id,
+              title: lesson.title,
+              description: generateRandomDescription(),
+              course: lesson.course_id,
+            }))
+          );
+        } else {
+          toast.error("No lessons found.");
+        }
       }
     } catch (error) {
       toast.error("Failed to fetch Lessons.");
@@ -58,12 +70,81 @@ const CoursesPage = () => {
 
   const generateRandomDescription = () => {
     const descriptions = [
-      "This lesson covers the core concepts.",
-      "A comprehensive overview of key ideas.",
-      "Dive deeper with practical examples.",
-      "Understand foundational aspects.",
+      "This lesson covers the core concepts and fundamentals of the topic.",
+      "A comprehensive overview of the essential principles and techniques.",
+      "Dive deeper into the topic with practical examples and applications.",
+      "Gain a solid understanding of the foundational aspects of this subject.",
+      "Learn key strategies and approaches to master this subject efficiently.",
+      "Explore advanced concepts and hands-on examples to boost your skills.",
+      "This lesson introduces essential methods and tools to help you excel.",
+      "Understand the practical aspects and challenges of the topic in real-world scenarios.",
     ];
-    return descriptions[Math.floor(Math.random() * descriptions.length)];
+    const randomIndex = Math.floor(Math.random() * descriptions.length);
+    return descriptions[randomIndex];
+  };
+  useEffect(() => {
+    fetchAllCourses();
+  }, []);
+
+  const handleLessonClick = async (lesson) => {
+    try {
+      toast.info("Generating video, please wait...");
+
+      const response = await axios.post(
+        "http://localhost:5002/generate_lesson",
+        {
+          topic: lesson.title,
+        }
+      );
+
+      if (response.data && response.data.video_url) {
+        toast.success("Lesson generated!");
+
+        // Navigate and pass video data via state (optional)
+        navigate(`/lectures/${lesson.course}`, {
+          state: {
+            lesson,
+            video_url: response.data.video_url,
+            image_url: response.data.image_url,
+          },
+        });
+      } else {
+        toast.error("Video not generated. Try again.");
+      }
+    } catch (error) {
+      console.error("Error generating lesson:", error);
+      toast.error("Failed to generate video.");
+    }
+  };
+
+  const enrollInCourse = async () => {
+    const loadingToast = toast.loading("Enrolling in Course . Be Patient");
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/users/enrollcourse",
+        { course_id: pendingCourseId },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
+      if (response.status === 200 && response.data.success) {
+        toast.dismiss(loadingToast);
+        toast.success(response.data.message || "Enrolled successfully!");
+        setSelectedCourse(pendingCourseId);
+        fetchLessonsForCourse(pendingCourseId);
+      } else {
+        toast.error(response.data.message || "Error enrolling in the course.");
+      }
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error("Failed to enroll.");
+      console.error("Enroll error:", error);
+    } finally {
+      setShowModal(false); // Close the modal after enrollment
+    }
   };
 
   const handleCourseClick = async (courseId) => {
@@ -93,6 +174,7 @@ const CoursesPage = () => {
     }
   };
 
+<<<<<<< HEAD
   const enrollInCourse = async () => {
     const loadingToast = toast.loading("Enrolling in Course . Be Patient");
     try {
@@ -127,6 +209,8 @@ const CoursesPage = () => {
     fetchAllCourses();
   }, []);
 
+=======
+>>>>>>> 9eea79aa17d0a479a4386659ffbb24d7d2b7ad33
   return (
     <div className="courses-page">
       <Sidebar />
@@ -147,14 +231,16 @@ const CoursesPage = () => {
 
         {selectedCourse && (
           <div className="lectures-list">
-            <h2>Lectures for {courses.find((c) => c.id === selectedCourse)?.name}</h2>
+            <h2>
+              Lectures for {courses.find((c) => c.id === selectedCourse)?.name}
+            </h2>
             {lessons
               .filter((lesson) => lesson.course === selectedCourse)
               .map((lesson) => (
                 <div
                   key={lesson.id}
                   className="lecture-card"
-                  onClick={() => navigate(`/lectures/${lesson.course}`)}
+                  onClick={() => handleLessonClick(lesson)}
                 >
                   <h4>{lesson.title}</h4>
                   <p>{lesson.description}</p>
