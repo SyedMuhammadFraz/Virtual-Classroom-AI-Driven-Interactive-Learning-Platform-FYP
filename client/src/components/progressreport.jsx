@@ -59,10 +59,14 @@ const ProgressReportPage = () => {
               { id: result.assignment_template_id }
             );
 
+            // Sanitize score: null, undefined => 0
+            const score = result.score ?? 0;
+
             return {
               name: titleRes.data.data,
-              progress: result.score,
-              grade: getAssignmentGrade(result.score),
+              progress: score,       // For display
+              chartProgress: score,  // For chart
+              grade: getAssignmentGrade(score),
               type: "Assignment"
             };
           })
@@ -91,6 +95,8 @@ const ProgressReportPage = () => {
 
   // Grading logic for assignments (1-10)
   const getAssignmentGrade = (score) => {
+    if (!score) return "F";  // Handles 0, null, undefined
+
     if (score >= 9) return "A+";
     if (score >= 8) return "A";
     if (score >= 7) return "B+";
@@ -113,9 +119,14 @@ const ProgressReportPage = () => {
           <div key={index} className="courses-card">
             <h3>{course.name} ({course.type})</h3>
             <div className="progress-bar">
-              <div className="progress" style={{ width: `${course.progress * (course.type === "Assignment" ? 10 : 1)}%` }}></div>
+              <div
+                className="progress"
+                style={{ width: `${(Number(course.progress) || 0) * (course.type === "Assignment" ? 10 : 1)}%` }}
+              ></div>
             </div>
-            <p className="details">Score: {course.progress}{course.type === "Quiz" ? "%" : "/10"}</p>
+            <p className="details">
+              Score: {course.type === "Assignment" ? (course.progress || 0) + "/10" : course.progress + "%"}
+            </p>
             <p className="grade">Grade: {course.grade}</p>
           </div>
         ))}
@@ -129,7 +140,12 @@ const ProgressReportPage = () => {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="progress" stroke="#8884d8" strokeWidth={2} />
+            <Line
+              type="monotone"
+              dataKey="progress"
+              stroke="#8884d8"
+              strokeWidth={2}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>

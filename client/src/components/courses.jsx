@@ -174,43 +174,6 @@ const CoursesPage = () => {
     }
   };
 
-<<<<<<< HEAD
-  const enrollInCourse = async () => {
-    const loadingToast = toast.loading("Enrolling in Course . Be Patient");
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/users/enrollcourse",
-        { course_id: pendingCourseId },
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
-
-      if (response.status === 200 && response.data.success) {
-        toast.dismiss(loadingToast); 
-        toast.success(response.data.message || "Enrolled successfully!");
-        setSelectedCourse(pendingCourseId);
-        fetchLessonsForCourse(pendingCourseId);
-      } else {
-        toast.error(response.data.message || "Error enrolling in the course.");
-      }
-    } catch (error) {
-      toast.dismiss(loadingToast);
-      toast.error("Failed to enroll.");
-      console.error("Enroll error:", error);
-    } finally {
-      setShowModal(false); // Close the modal after enrollment
-    }
-  };
-
-  useEffect(() => {
-    fetchAllCourses();
-  }, []);
-
-=======
->>>>>>> 9eea79aa17d0a479a4386659ffbb24d7d2b7ad33
   return (
     <div className="courses-page">
       <Sidebar />

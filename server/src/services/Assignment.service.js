@@ -19,13 +19,13 @@ async function generateAssignmentServiceForStudent(student_id, assignment_templa
     }
 
     // Generate assignment content using Groq AI
-    const assignmentData = await getAssignmentFromGroq(difficulty_level, assignment_title);
+    const assignmentData = await getAssignmentFromGroq(Math.round(difficulty_level), assignment_title);
 
     // Insert into DB
     const savedAssignment = await insertStudentAssignment({
       student_id,
       assignment_template_id,
-      difficulty_level,
+      difficulty_level: difficulty_level, 
       content: assignmentData,
     });
 

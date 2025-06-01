@@ -16,7 +16,7 @@ const StudentAssignment = sequelize.define('student_assignment', {
     allowNull: false,
   },
   difficulty_level: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT,
     allowNull: true,
   },
   content: {
