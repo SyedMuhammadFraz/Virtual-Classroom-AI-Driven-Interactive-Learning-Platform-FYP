@@ -195,11 +195,11 @@
   --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-* {
+/*👉* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
+}👈*/
 
 /* Main Layout Container */
 .lecturers-page {
@@ -783,7 +783,7 @@
     gap: 20px;
     padding: 20px;
   }
-  
+
   .course-name {
     font-size: 2rem;
     padding: 28px 20px;
