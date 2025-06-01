@@ -460,7 +460,9 @@
   width: 100%;
   max-width: 400px;
   display: flex;
-  gap: 12px;
+  flex-wrap: nowrap; /* consider wrap if vertical stacking is okay */
+  overflow: hidden; /* optional: clips overflow */
+  gap: 10px;
   background: var(--white);
   border-radius: 16px;
   padding: 20px;
