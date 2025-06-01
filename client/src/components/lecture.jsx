@@ -53,16 +53,16 @@
 //     setAnswer("");
 //     setContext([]);
 
-//     try {
-//       const response = await axios.post("http://localhost:5004/ask", {
-//         question,
-//       });
-//       setAnswer(response.data.answer);
-//       setContext(response.data.context || []);
-//     } catch (err) {
-//       console.error("Error fetching answer:", err);
-//       setError("Failed to fetch the answer. Please try again.");
-//     }
+    // try {
+    //   const response = await axios.post("http://localhost:5004/ask", {
+    //     question,
+    //   });
+    //   setAnswer(response.data.answer);
+    //   setContext(response.data.context || []);
+    // } catch (err) {
+    //   console.error("Error fetching answer:", err);
+    //   setError("Failed to fetch the answer. Please try again.");
+    // }
 
 //     setLoadingAnswer(false);
 //   };
@@ -229,7 +229,7 @@ function Lecture() {
 
     try {
       const result = await axios.post(
-        `http://localhost:5000/api/query-lesson/${id}`,
+        `http://localhost:5004/ask`,
         { question: questionText },
         {
           headers: { "Content-Type": "application/json" },
