@@ -14,3 +14,10 @@ Alternative combined description:
 "Add learning progress tracking and assessment features - includes progress dashboard and OOP quiz module"
 ![assessment](https://github.com/user-attachments/assets/60f0779f-ae19-4a93-90b2-ea1507a5da36)
 ![progress](https://github.com/user-attachments/assets/20e94b86-efd6-4056-9641-438ff97b970c)
+"Integrate video learning module with Three.js avatar for interactive teacher demonstrations"
+"Add AI performance tracking dashboard showing module metrics over 10-week period"
+Alternative combined description:
+"Implement Three.js avatar integration for video lessons and add AI performance analytics visualization"
+
+![IMG-20251006-WA0010](https://github.com/user-attachments/assets/457392f5-8073-4a34-b6d2-60bb39af35cb)
+![video](https://github.com/user-attachments/assets/013531c7-bed4-4700-871f-95b79926eac7)
